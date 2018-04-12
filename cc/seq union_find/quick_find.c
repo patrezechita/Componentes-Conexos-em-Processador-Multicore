@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MINIMO(x, y) (((x) < (y)) ? (x) : (y))
+
 void union_(int *vetorQF, int qtdVertices, int p, int q);
 int find_(int *vetorQF, int p);
 
@@ -30,7 +32,8 @@ void main() {
 
 	// imprime o vetor no arquivo de saida
 	for(int i=0; i<qtdVertices; i++) {
-		fprintf(arqSaida, "%d %d\n", i, vetorQF[i]);
+		//fprintf(arqSaida, "%d %d\n", i, vetorQF[i]);
+		printf("%d %d\n", i, vetorQF[i]);
 	}
 
 	// libera memoria
@@ -51,12 +54,12 @@ void union_(int *vetorQF, int qtdVertices, int p, int q) {
 	// se os pais sao iguais, ja estao no mesmo componente
 	if(pID == qID)
 		return;
-	
+	int menor = 0;
 	// faz uniao de dois vertices
 	// percorre o vetor para atualiar todos os pais
 	for(int i=0; i<qtdVertices; i++) {
-		if(vetorQF[i] == pID) {
-			vetorQF[i] = qID;
+		if(vetorQF[i] == pID || vetorQF[i] == qID) {
+			vetorQF[i] = MINIMO(pID, qID);
 		}
 	}
 }
