@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "comum.h"
 
 typedef struct node {
     int val;
@@ -14,19 +15,23 @@ typedef struct grafo {
 } grafo_t;
 
 int root = 0;
-int vetorDFS[999];
+int *vetorDFS;
 
 void push(grafo_t G[], int val1, int val2);
 void DFS_Visita(grafo_t G[], int i);
 
 void main() {
-	FILE *arqEntrada;
-	arqEntrada = fopen("grafo.txt", "r");
+	int **matrizEntrada, qtdVertices, qtdArestas;
 
-	int qtdVertices, qtdArestas;
+	// recebe a matriz de entrada da leitura
+ 	matrizEntrada = lerEntrada();
 
-	// guarda o tamanho da matriz quadrada
-	fscanf(arqEntrada, "%d %d", &qtdVertices, &qtdArestas);
+ 	// guarda a quantidade de vertices e arestas
+    qtdVertices = matrizEntrada[0][0];
+    qtdArestas = matrizEntrada[0][1];
+
+    // aloca espaco para o vetor dos componentes
+	vetorDFS = (int *)malloc(qtdVertices * sizeof(int));
 
 	// vetor com todos os grafos
 	grafo_t G[qtdVertices];
@@ -39,10 +44,9 @@ void main() {
 	int v1, v2;
 
 	//insere as arestas
-	for(int i=0; i<qtdArestas; i++){
-		fscanf(arqEntrada, "%d %d", &v1, &v2);
-		push(G, v1, v2);
-		push(G, v2, v1);
+	for(int i=1; i<qtdArestas; i++){
+		push(G, matrizEntrada[i][0], matrizEntrada[i][1]);
+		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
 	}
 	
 
@@ -69,9 +73,7 @@ void main() {
 			}
 		}
 
-		for(int i=0; i<qtdVertices; i++){
-			printf("%d %d\n", i, vetorDFS[i]);
-		}
+	imprimeSaida("saida_dfs.txt", vetorDFS, qtdVertices);
 
 	return;
 }
