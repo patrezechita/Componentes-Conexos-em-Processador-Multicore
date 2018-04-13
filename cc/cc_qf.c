@@ -12,11 +12,11 @@ void main() {
 	int **matrizEntrada, *vetorQF, qtdVertices, qtdArestas, p, q; 
 
 	// recebe a matriz de entrada da leitura
- 	matrizEntrada = lerEntrada();
+	matrizEntrada = lerEntrada();
 
- 	// guarda a quantidade de vertices e arestas
-    qtdVertices = matrizEntrada[0][0];
-    qtdArestas = matrizEntrada[0][1];
+	// guarda a quantidade de vertices e arestas
+	qtdVertices = matrizEntrada[0][0];
+	qtdArestas = matrizEntrada[0][1];
 
 	// aloca espaco para o vetor dos componentes
 	vetorQF = (int *)malloc(qtdVertices * sizeof(int));

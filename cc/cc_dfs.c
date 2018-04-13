@@ -3,15 +3,15 @@
 #include "comum.h"
 
 typedef struct node {
-    int val;
-    struct node * next;
+	int val;
+	struct node * next;
 } node_t;
 
 typedef struct grafo {
-    int val;
+	int val;
 	char cor;
 	int pai;
-    struct node * next;
+	struct node * next;
 } grafo_t;
 
 int root = 0;
@@ -24,83 +24,67 @@ void main() {
 	int **matrizEntrada, qtdVertices, qtdArestas;
 
 	// recebe a matriz de entrada da leitura
- 	matrizEntrada = lerEntrada();
+	matrizEntrada = lerEntrada();
 
- 	// guarda a quantidade de vertices e arestas
-    qtdVertices = matrizEntrada[0][0];
-    qtdArestas = matrizEntrada[0][1];
+	// guarda a quantidade de vertices e arestas
+	qtdVertices = matrizEntrada[0][0];
+	qtdArestas = matrizEntrada[0][1];
 
-    // aloca espaco para o vetor dos componentes
+	// aloca espaco para o vetor dos componentes
 	vetorDFS = (int *)malloc(qtdVertices * sizeof(int));
 
 	// vetor com todos os grafos
 	grafo_t G[qtdVertices];
 
-	//inicializa o grafo
+	// inicializa o grafo
 	for(int i=0; i<qtdVertices; i++) {	
 		G[i].next = NULL;
 	}
 
-	int v1, v2;
-
-	//insere as arestas
-	for(int i=1; i<qtdArestas; i++){
+	// insere as arestas
+	for(int i=1; i<qtdArestas; i++) {
 		push(G, matrizEntrada[i][0], matrizEntrada[i][1]);
 		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
 	}
 	
+	// DFS
+	// para cada vertice, pintar de branco
+	for(int i=0; i<qtdVertices; i++) {
+		G[i].cor = 'B';
+		G[i].pai = -1;
+		G[i].val = i;
+	}
 
-//////// comeca o dfs
-
-		//para cada vertice, pintar de branco
-		for(int i=0; i<qtdVertices; i++){
-		
-			G[i].cor = 'B';
-			G[i].pai = -1;
-			G[i].val = i;
+	// executa o DFS
+	for(int i=0; i<qtdVertices; i++) {
+		if(G[i].cor == 'B'){
+			root = i;
+			DFS_Visita(G, i);
 		}
-
-		
-				
-	
-
-		//executa o dfs
-		for(int i=0; i<qtdVertices; i++){
-		
-			if(G[i].cor == 'B'){
-				root = i;
-				DFS_Visita(G, i);
-			}
-		}
+	}
 
 	imprimeSaida("saida_dfs.txt", vetorDFS, qtdVertices);
-
-	return;
 }
 
 void push(grafo_t G[], int val1, int val2) {
-    
-    if(G[val1].next == NULL){
+	if(G[val1].next == NULL){
 		G[val1].next = malloc(sizeof(node_t));
-    	G[val1].next->val = val2;
-    	G[val1].next->next = NULL;
-    	return;
-    }
+		G[val1].next->val = val2;
+		G[val1].next->next = NULL;
+		return;
+	}
 
+	node_t * current = G[val1].next;
 
+	// percorre os no da lista ate chegar no ultimo
+	while (current->next != NULL) {
+		current = current->next;
+	}
 
-    node_t * current = G[val1].next;
-
-
-    // percorre os no da lista ate chegar no ultimo
-    while (current->next != NULL) {
-        current = current->next;
-    }
-
-    //aloca um no
-    current->next = malloc(sizeof(node_t));
-    current->next->val = val2;
-    current->next->next = NULL;
+	//aloca um no
+	current->next = malloc(sizeof(node_t));
+	current->next->val = val2;
+	current->next->next = NULL;
 }
 
 
@@ -114,21 +98,19 @@ void DFS_Visita(grafo_t G[], int i){
 
 	node_t * current = G[i].next;
 
-    while (current != NULL) {
+	while (current != NULL) {
 
 
-        int u = i;
-        int v = current->val;
+		int u = i;
+		int v = current->val;
 
-        if(G[v].cor == 'B'){
-        	G[v].pai = u;
-        	DFS_Visita(G, v);
-        }
+		if(G[v].cor == 'B'){
+			G[v].pai = u;
+			DFS_Visita(G, v);
+		}
 
-        current = current->next;
-    }
+		current = current->next;
+	}
 
-    G[i].cor = 'P';
-
-
+	G[i].cor = 'P';
 }
