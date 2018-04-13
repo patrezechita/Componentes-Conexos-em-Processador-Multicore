@@ -1,4 +1,4 @@
-json:
+cc:
 	clear
 	@echo "-> Componentes Conexos - QuickFind"
 	gcc cc_qf.c
