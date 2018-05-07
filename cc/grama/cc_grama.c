@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "comum.h"
 
 // retorna o minimo entre dois valores
 #define MINIMO(x, y) (((x) < (y)) ? (x) : (y))
 
-#define nThread 5
+
 #define maxINT 99999
+int nThread = 4;
+
+
 
 typedef struct node {
 	int val;
@@ -64,26 +68,64 @@ void main() {
 		G[i].val = i;
 	}
 
+	int qtdLastTh;
+	// calcula a quantidade de vertice por thread
+	int NTH, NVT;
+	NVT = qtdVertices;
+	NTH = nThread;
+	
 
+
+
+
+	int qtdTh;
+
+
+
+	// calcula a quantidade de vertices por thread
+	qtdTh = ceil((float)NVT/NTH); //pega o divisor
+	qtdLastTh = qtdTh; //o ultimo e igual a todos
+	NTH = NVT / qtdTh; // se tiver mais thread que vertice
+	if(NVT%qtdTh != 0) { //se o ultimo for diferente
+		NTH++;
+		qtdLastTh = NVT%qtdTh;
+	}
+
+	nThread = NTH; //so atualizando
+
+
+
+	printf("<%d th> %d ver por thr e a ultima tem %d\n", NTH, qtdTh, qtdLastTh);
 
 
 
 	// calcula a qtd de vertices por thread
-	int qtdPorThread = qtdVertices/nThread;
-	int resto = qtdVertices%nThread;
+	int qtdPorThread = qtdTh;
+	int resto = qtdLastTh;
+
+	//int qtdTh = ceil(qtdVertices/nThread);
+	
+	 
+
 
 	//para cada thread
 	for(int i=0; i<nThread; i++) {
-		int tBegin = i * qtdPorThread;
-		int tLast = tBegin + qtdPorThread - 1;
+		int tBegin = i * qtdPorThread; //primeiro elemento da thread
+		int tLast = tBegin + qtdPorThread - 1; //ultimo elemento da thread
 		tID = i;
 		
-		if(i==(nThread-1)) {
-			tLast = tLast + resto;
-			printf("thread %d, %d vert, do %d ao %d.\n", i, qtdPorThread+resto, tBegin, tLast);
+		if(i==(nThread-1)) { //ultima thread
+			if(qtdLastTh == 1){
+				tLast = tBegin;
+			}
+			else {
+				tLast =  tBegin+qtdLastTh;
+			}
+			
+			printf("\n<th %d | %d vert, do %d ao %d>\n", i, qtdLastTh, tBegin, tLast);
 		}
 		else {
-			printf("thread %d, %d vert, do %d ao %d.\n", i, qtdPorThread, tBegin, tLast);
+			printf("\n<th %d | %d vert, do %d ao %d>\n", i, qtdPorThread, tBegin, tLast);
 		}
 	
 		// limpa o vetor
