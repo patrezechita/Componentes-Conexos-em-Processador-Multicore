@@ -115,16 +115,13 @@ void main() {
 		tID = i;
 		
 		if(i==(nThread-1)) { //ultima thread
-			if(qtdLastTh == 1){
-				tLast = tBegin;
-			}
-			else {
-				tLast =  tBegin+qtdLastTh;
-			}
+		
+				tLast =  tBegin+qtdLastTh-1;
+			
 			
 			printf("\n<th %d | %d vert, do %d ao %d>\n", i, qtdLastTh, tBegin, tLast);
 		}
-		else {
+		else { //demais threads
 			printf("\n<th %d | %d vert, do %d ao %d>\n", i, qtdPorThread, tBegin, tLast);
 		}
 	
@@ -134,7 +131,7 @@ void main() {
 
 		}
 
-		// executa o de cada thread
+		// executa o DFS de cada thread
 		for(int i=tBegin; i<=tLast; i++) {
 			if(G[i].cor == 'B') {
 				root = i;
@@ -143,16 +140,42 @@ void main() {
 			}
 		}
 		
+		// imprime pra debug
 		printf("[ ");
 		for(int i=0; i<qtdVertices; i++) {
 			printf("%d ", vetorDFS[tID][i]);
 		}
 		printf("]\n");
 
+		/////////////////////////////////
+		// acha os pais
+		int vetorAux[qtdVertices]; // vetor auxiliar
+		//preenche com -1
+		for(int i=0; i<qtdVertices; i++) { vetorAux[i] = -1;}
 
+		//calcula os pais
+		for(int i=0; i<qtdVertices; i++) { //dentro do vetor da thread
+			
+			
+			
+				if(vetorAux[vetorDFS[tID][i]] == -1){
+					vetorAux[vetorDFS[tID][i]] = i;
+					vetorDFS[tID][i] = i;
+				}
+				else {
+					vetorDFS[tID][i] = vetorAux[vetorDFS[tID][i]];
+				}
 
+			
+			//printf("%d ", vetorDFS[tID][i]);
+		}
 
-
+		// imprime pra debug
+		printf("[ ");
+		for(int i=0; i<qtdVertices; i++) {
+			printf("%d ", vetorDFS[tID][i]);
+		}
+		printf("]\n");
 
 
 	}
