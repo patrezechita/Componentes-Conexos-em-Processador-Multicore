@@ -68,62 +68,81 @@ void main() {
 		G[i].val = i;
 	}
 
-	int qtdLastTh;
-	// calcula a quantidade de vertice por thread
-	int NTH, NVT;
-	NVT = qtdVertices;
-	NTH = nThread;
+
+
+	// criar vetor para cada thr e armazenar a qtd de vertice
+	int qtdVetorTh[nThread];
+	// calcula o piso e teto
+	int piso = floor((float)qtdVertices/nThread);
+	int teto = ceil((float)qtdVertices/nThread);
+	for(int i=0; i<nThread; i++) {
+		qtdVetorTh[i] = piso;
+	}
+	int aux = qtdVertices - (piso*nThread);
+	for(int i=0; i<aux; i++) {
+		qtdVetorTh[i] = teto;
+	}
+
+	// printf("%d aux %d teto\n", aux, teto);
+
+	// for(int i=0; i<nThread; i++) {
+	// 	printf("<%d|%d>\n", i, qtdVetorTh[i]);
+	// }
+
+
+
+
+	// int qtdLastTh;
+	// // calcula a quantidade de vertice por thread
+	// int NTH, NVT;
+	// NVT = qtdVertices;
+	// NTH = nThread;
 	
 
 
 
 
-	int qtdTh;
+	// int qtdTh;
 
 
 
-	// calcula a quantidade de vertices por thread
-	qtdTh = ceil((float)NVT/NTH); //pega o divisor
-	qtdLastTh = qtdTh; //o ultimo e igual a todos
-	NTH = NVT / qtdTh; // se tiver mais thread que vertice
-	if(NVT%qtdTh != 0) { //se o ultimo for diferente
-		NTH++;
-		qtdLastTh = NVT%qtdTh;
-	}
+	// // calcula a quantidade de vertices por thread
+	// qtdTh = ceil((float)NVT/NTH); //pega o divisor
+	// qtdLastTh = qtdTh; //o ultimo e igual a todos
+	// NTH = NVT / qtdTh; // se tiver mais thread que vertice
+	// if(NVT%qtdTh != 0) { //se o ultimo for diferente
+	// 	NTH++;
+	// 	qtdLastTh = NVT%qtdTh;
+	// }
 
-	nThread = NTH; //so atualizando
-
-
-
-	printf("<%d th> %d ver por thr e a ultima tem %d\n", NTH, qtdTh, qtdLastTh);
+	// nThread = NTH; //so atualizando
 
 
 
-	// calcula a qtd de vertices por thread
-	int qtdPorThread = qtdTh;
-	int resto = qtdLastTh;
+	// printf("<%d th> %d ver por thr e a ultima tem %d\n", NTH, qtdTh, qtdLastTh);
+
+
+
+	
+	// int qtdPorThread = qtdTh;
+	// int resto = qtdLastTh;
 
 	//int qtdTh = ceil(qtdVertices/nThread);
 	
 	 
 
-
+	int tBegin = 0;
 	//para cada thread
 	for(int i=0; i<nThread; i++) {
-		int tBegin = i * qtdPorThread; //primeiro elemento da thread
+		int qtdPorThread = qtdVetorTh[i];
+		//int tBegin = i * qtdPorThread; //primeiro elemento da thread
+		
 		int tLast = tBegin + qtdPorThread - 1; //ultimo elemento da thread
 		tID = i;
 		
-		if(i==(nThread-1)) { //ultima thread
-		
-				tLast =  tBegin+qtdLastTh-1;
-			
-			
-			printf("\n<th %d | %d vert, do %d ao %d>\n", i, qtdLastTh, tBegin, tLast);
-		}
-		else { //demais threads
-			printf("\n<th %d | %d vert, do %d ao %d>\n", i, qtdPorThread, tBegin, tLast);
-		}
+
+		printf("\n<th %d | %d vert, do %d ao %d>\n", i, qtdPorThread, tBegin, tLast);
+
 	
 		// limpa o vetor
 		for(int i=0; i<qtdVertices; i++) {
@@ -140,44 +159,44 @@ void main() {
 			}
 		}
 		
-		// imprime pra debug
-		printf("[ ");
-		for(int i=0; i<qtdVertices; i++) {
-			printf("%d ", vetorDFS[tID][i]);
-		}
-		printf("]\n");
+		// // imprime pra debug
+		// printf("[ ");
+		// for(int i=0; i<qtdVertices; i++) {
+		// 	printf("%d ", vetorDFS[tID][i]);
+		// }
+		// printf("]\n");
 
-		/////////////////////////////////
-		// acha os pais
-		int vetorAux[qtdVertices]; // vetor auxiliar
-		//preenche com -1
-		for(int i=0; i<qtdVertices; i++) { vetorAux[i] = -1;}
+		// /////////////////////////////////
+		// // acha os pais
+		// int vetorAux[qtdVertices]; // vetor auxiliar
+		// //preenche com -1
+		// for(int i=0; i<qtdVertices; i++) { vetorAux[i] = -1;}
 
-		//calcula os pais
-		for(int i=0; i<qtdVertices; i++) { //dentro do vetor da thread
+		// //calcula os pais
+		// for(int i=0; i<qtdVertices; i++) { //dentro do vetor da thread
 			
 			
 			
-				if(vetorAux[vetorDFS[tID][i]] == -1){
-					vetorAux[vetorDFS[tID][i]] = i;
-					vetorDFS[tID][i] = i;
-				}
-				else {
-					vetorDFS[tID][i] = vetorAux[vetorDFS[tID][i]];
-				}
+		// 		if(vetorAux[vetorDFS[tID][i]] == -1){
+		// 			vetorAux[vetorDFS[tID][i]] = i;
+		// 			vetorDFS[tID][i] = i;
+		// 		}
+		// 		else {
+		// 			vetorDFS[tID][i] = vetorAux[vetorDFS[tID][i]];
+		// 		}
 
 			
-			//printf("%d ", vetorDFS[tID][i]);
-		}
+		// 	//printf("%d ", vetorDFS[tID][i]);
+		// }
 
-		// imprime pra debug
-		printf("[ ");
-		for(int i=0; i<qtdVertices; i++) {
-			printf("%d ", vetorDFS[tID][i]);
-		}
-		printf("]\n");
+		// // imprime pra debug
+		// printf("[ ");
+		// for(int i=0; i<qtdVertices; i++) {
+		// 	printf("%d ", vetorDFS[tID][i]);
+		// }
+		// printf("]\n");
 
-
+		tBegin += qtdPorThread;
 	}
 
 
