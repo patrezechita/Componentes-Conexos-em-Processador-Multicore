@@ -1,169 +1,261 @@
+#include <math.h>
+#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include "comum.h"
 
-// retorna o minimo entre dois valores
-#define MINIMO(x, y) (((x) < (y)) ? (x) : (y))
+// retorna o mínimo entre dois valores
+#define MINIMO(x,y) (((x)<(y))?(x):(y))
 
-
-#define maxINT 99999
-int nThread = 8;
-
-
-
-typedef struct node {
+// estrutura da lista de adjacência
+typedef struct node
+{
 	int val;
 	struct node * next;
 } node_t;
 
-typedef struct grafo {
+// elemento da lista de adjacência
+typedef struct grafo
+{
 	int val;
 	char cor;
 	int pai;
 	struct node * next;
 } grafo_t;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int root = 0;
-//int *vetorDFS;
+
 int vetorDFS[999][999];
 int tID;
+	int thID;
+int nThread = 4;
+int qtdArestasDFS=0;
+int qtdArestaDaTh[4]; //mudar aqui tb para o numero de th
+ // nao ta alocado dinamicamente
 
 
-
-int find_(int th, int p) {
-	return vetorDFS[th][p];
-}
-
-
-
-void union_(int th, int qtdVertices, int p, int q) {
-	int pID = find_(th, p);
-	int qID = find_(th, q);
-
-	// se os pais sao iguais, ja estao no mesmo componente
-	if(pID == qID)
-		return;
-
-	// faz union de dois vertices
-	// percorre o vetor para atualiar todos os pais
-	for(int i=0; i<qtdVertices; i++) {
-		if(vetorDFS[th][i] == pID || vetorDFS[th][i] == qID) {
-			// da o minimo para o pai por motivos de padronizacao
-			vetorDFS[th][i] = MINIMO(pID, qID);
-		}
-	}
-}
-
-
-
-
+int find_(int th, int p);
+void union_(int th, int qtdVertices, int p, int q);
 void push(grafo_t G[], int val1, int val2);
-void DFS_Visita(grafo_t G[], int i, int tBegin, int tLast);
+void DFS_Visita(grafo_t G[], int i, int tBegin, int tLast, int** matrizArestas);
 
-void main() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// variáveis globais
+int **resultadoDFS;
+
+// declaração de funções
+void DFS(grafo_t G[], int i, int vInicial, int vFinal, int vPai, int thID);
+
+// função principal
+void main()
+{
 	int **matrizEntrada, qtdVertices, qtdArestas;
 
 	// recebe a matriz de entrada da leitura
 	matrizEntrada = lerEntrada();
 
-	// guarda a quantidade de vertices e arestas
+	// guarda a quantidade de vértices e arestas
 	qtdVertices = matrizEntrada[0][0];
 	qtdArestas = matrizEntrada[0][1];
 
-	// aloca espaco para o vetor dos componentes
-	//vetorDFS = (int *)malloc(qtdVertices * sizeof(int));
-
-
-	// vetor com todos os grafos
+	// cria e inicializa a lista de adjacência
 	grafo_t G[qtdVertices];
-
-	// inicializa o grafo
-	for(int i=0; i<qtdVertices; i++) {	
+	for(int i=0; i<qtdVertices; i++)
+	{	
 		G[i].next = NULL;
 	}
 
-	// insere as arestas
-	for(int i=1; i<qtdArestas; i++) {
+	// insere as arestas na lista de adjacência
+	for(int i=1; i<qtdArestas; i++)
+	{
 		push(G, matrizEntrada[i][0], matrizEntrada[i][1]);
 		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
 	}
 	
-	// DFS
-	// para cada vertice, pintar de branco
-	for(int i=0; i<qtdVertices; i++) {
+	// inicializar os vértices para o DFS
+	for(int i=0; i<qtdVertices; i++)
+	{
 		G[i].cor = 'B';
 		G[i].pai = -1;
 		G[i].val = i;
 	}
 
 
+	// aloca memória para a matriz de vetores resultadoDFS
+	resultadoDFS = malloc(nThread * sizeof(int *));
+	for (int i = 0; i < nThread; i++)
+	{
+		resultadoDFS[i] = malloc(qtdVertices * sizeof(int));
+	}
+
+	// vetor que guarda informações auxiliares para as threads
+	// quantidade de vértice; vértice inicial; vértice final 
+	int infoThread[nThread][3];
+
+	// calcula o piso e o teto para dividir os vértices
+	int piso = floor((float)qtdVertices/nThread);
+	int teto = ceil((float)qtdVertices/nThread);
+	int qtdTeto = qtdVertices - (piso*nThread);
+	
+	// guarda a quantidade de vértice de cada thread
+	for(int i=0; i<nThread; i++)
+	{
+		if(i < qtdTeto)
+			infoThread[i][0] = teto;
+		else
+			infoThread[i][0] = piso;
+	}
+
+	// calcula o vértice inicial e final de cada thread
+	int vInicial = 0, vFinal;
+	for(int i=0; i<nThread; i++)
+	{
+		vFinal = vInicial + infoThread[i][0] - 1;
+		infoThread[i][1] = vInicial;
+		infoThread[i][2] = vFinal;
+		vInicial += infoThread[i][0];
+	}
+
+	// imprime infoThread para debug
+	printf("\ninfoThread\n");
+	for(int i=0; i<nThread; i++)
+	{
+		// thread, quantidade de vértice, vértice inicial e vértice final
+		printf("t%d [%d;%d;%d]\n", i, infoThread[i][0], infoThread[i][1], infoThread[i][2]);
+	}
+
+	// cada thread inicia o DFS em paralelo
+	#pragma omp parallel private(vInicial, vFinal) shared(G, infoThread)
+	{
+		// identificador único da thread
+		int thID = omp_get_thread_num();
+		
+		// guarda o pai do vértice antes de entrar nele
+		int vPai;
+
+		// vértices iniciais e finais
+		vInicial = infoThread[thID][1];
+		vFinal = infoThread[thID][2];
+	
+		// limpa o seu vetor resultado do DFS
+		for(int i=0; i<qtdVertices; i++)
+		{
+			resultadoDFS[thID][i] = i;
+		}
+
+		// executa o DFS
+		for(int i=vInicial; i<=vFinal; i++)
+		{
+			if(G[i].cor == 'B')
+			{
+				vPai = i;
+				DFS(G, i, vInicial, vFinal, vPai, thID);
+			}
+		}
+	}
+	// fim da execução em paralelo
+
+	// imprime vetor dfs para debug
+	printf("\nresultadoDFS\n");
+	for (int i = 0; i < nThread; i++)
+	{
+		printf("t%d [", i);
+		for (int j = 0; j < qtdVertices; j++)
+		{
+			printf("%d ", resultadoDFS[i][j]);
+		}
+			printf("]\n");
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// criar vetor para cada thr e armazenar a qtd de vertice
 	int qtdVetorTh[nThread];
 	// calcula o piso e teto
-	int piso = floor((float)qtdVertices/nThread);
-	int teto = ceil((float)qtdVertices/nThread);
+
 	for(int i=0; i<nThread; i++) {
 		qtdVetorTh[i] = piso;
 	}
-	int aux = qtdVertices - (piso*nThread);
+int aux = qtdVertices - (piso*nThread);
 	for(int i=0; i<aux; i++) {
 		qtdVetorTh[i] = teto;
 	}
 
-	// printf("%d aux %d teto\n", aux, teto);
-
-	// for(int i=0; i<nThread; i++) {
-	// 	printf("<%d|%d>\n", i, qtdVetorTh[i]);
-	// }
-
-
-
-
-	// int qtdLastTh;
-	// // calcula a quantidade de vertice por thread
-	// int NTH, NVT;
-	// NVT = qtdVertices;
-	// NTH = nThread;
-	
-
-
-
-
-	// int qtdTh;
-
-
-
-	// // calcula a quantidade de vertices por thread
-	// qtdTh = ceil((float)NVT/NTH); //pega o divisor
-	// qtdLastTh = qtdTh; //o ultimo e igual a todos
-	// NTH = NVT / qtdTh; // se tiver mais thread que vertice
-	// if(NVT%qtdTh != 0) { //se o ultimo for diferente
-	// 	NTH++;
-	// 	qtdLastTh = NVT%qtdTh;
-	// }
-
-	// nThread = NTH; //so atualizando
-
-
-
-	// printf("<%d th> %d ver por thr e a ultima tem %d\n", NTH, qtdTh, qtdLastTh);
-
-
 
 	
-	// int qtdPorThread = qtdTh;
-	// int resto = qtdLastTh;
-
-	//int qtdTh = ceil(qtdVertices/nThread);
-	
-	 printf("\nInformacoes das threads:\n");
+	 //printf("\nInformacoes das threads:\n");
 
 
 	 int matrizVertThread[nThread][2];
 
 	int tBegin = 0;
+
+	////////////////////////////////////////
 	//para cada thread
 	for(int i=0; i<nThread; i++) {
 		int qtdPorThread = qtdVetorTh[i];
@@ -174,7 +266,7 @@ void main() {
 		
 		matrizVertThread[i][0]=tBegin;
 		matrizVertThread[i][1]=tLast;
-		printf("t%d tem %d vert. vai do %d ao %d\n", i, qtdPorThread, tBegin, tLast);
+		//printf("t%d tem %d vert. vai do %d ao %d\n", i, qtdPorThread, tBegin, tLast);
 
 	
 		// limpa o vetor
@@ -183,92 +275,57 @@ void main() {
 
 		}
 
+
+
+		//vetor das arestas
+		int **matrizArestas;
+		//aloca memoria pro vetor das arestas
+		matrizArestas = malloc(qtdArestas * sizeof(int *));
+		for (int i = 0; i < qtdArestas; i++) {
+			matrizArestas[i] = malloc(2 * sizeof(int));
+		}
+		//qtd de arestas que vai guardar no dfs
+		qtdArestasDFS=0;
+
+
+
 		// executa o DFS de cada thread
 		for(int i=tBegin; i<=tLast; i++) {
 			if(G[i].cor == 'B') {
 				root = i;
 				//printf("entrei no %d\n", i);
-				DFS_Visita(G, i, tBegin, tLast);
+				DFS_Visita(G, i, tBegin, tLast, matrizArestas);
 			}
 		}
 		
-		// // imprime pra debug
-		// printf("[ ");
-		// for(int i=0; i<qtdVertices; i++) {
-		// 	printf("%d ", vetorDFS[tID][i]);
-		// }
-		// printf("]\n");
+		//printf("%d qtd de arestas na mariz\n", qtdArestasDFS);
 
-		// /////////////////////////////////
-		// // acha os pais
-		// int vetorAux[qtdVertices]; // vetor auxiliar
-		// //preenche com -1
-		// for(int i=0; i<qtdVertices; i++) { vetorAux[i] = -1;}
+		for(int i=0; i<qtdArestasDFS; i++) {
+		printf("<%d,%d>\n", matrizArestas[i][0], matrizArestas[i][1]);
+		}
+		qtdArestaDaTh[tID]=qtdArestasDFS;
+		printf("\n");
 
-		// //calcula os pais
-		// for(int i=0; i<qtdVertices; i++) { //dentro do vetor da thread
-			
-			
-			
-		// 		if(vetorAux[vetorDFS[tID][i]] == -1){
-		// 			vetorAux[vetorDFS[tID][i]] = i;
-		// 			vetorDFS[tID][i] = i;
-		// 		}
-		// 		else {
-		// 			vetorDFS[tID][i] = vetorAux[vetorDFS[tID][i]];
-		// 		}
-
-			
-		// 	//printf("%d ", vetorDFS[tID][i]);
-		// }
-
-		// imprime pra debug
-		// printf("[ ");
-		// for(int i=0; i<qtdVertices; i++) {
-		// 	printf("%d ", vetorDFS[tID][i]);
-		// }
-		// printf("]\n");
 
 		tBegin += qtdPorThread;
 	}
 
-	printf("\nVetor dfs de cada thread:\n");
+	// printf("\nVetor dfs de cada thread:\n");
 
-	// imprime vetor dfs para debug
-	for (int i = 0; i < nThread; i++) {
-		printf("t%d [", i);
-		for (int j = 0; j < qtdVertices; j++) {
-			printf("%d ", vetorDFS[i][j]);
-		}
-			printf("]\n");
-	}
+	// // imprime vetor dfs para debug
+	// for (int i = 0; i < nThread; i++) {
+	// 	printf("t%d [", i);
+	// 	for (int j = 0; j < qtdVertices; j++) {
+	// 		printf("%d ", vetorDFS[i][j]);
+	// 	}
+	// 		printf("]\n");
+	// }
 
-		// //calcula o minimo
-		// printf("\nvetor dos minimos\n[ ");
-		// for (int i = 0; i < qtdVertices; i++) {
-		// 	int min = 999;
+	
 
-		// 	for (int j = 0; j < nThread; j++) {
-		// 		min = MINIMO(vetorDFS[j][i], min);
-		// 	}
-		// 	printf("%d ", min);
-		// }
-		// printf("]\n");
-	//imprimeSaida("saida_dfs.txt", vetorDFS, qtdVertices);
-
-
-	// fazer merge nas florestas
-
-
-
-
-// void print_list(node_t * head) {
-//     node_t * current = head;
-
-//     while (current != NULL) {
-//         printf(" -> [%d]", current->val);
-//         current = current->next;
-//     }
+// printf("depois das th\n");
+// for(int i=0;i<nThread;i++){
+// 	printf("th%d tem %d arestas\n", i, qtdArestaDaTh[i]);
 // }
 
 
@@ -302,36 +359,9 @@ void main() {
 			//printf("merge de t%d com t%d\n", 2*(j-1)+salto, 2*(j-1)+1+salto);
 
 			k = 2*j*salto;
-			//printf("arestas da thread %d:\n", j);
-			//printf("thread %d vai de %d a %d\n", j, matrizVertThread[j][0], matrizVertThread[j][1]);
-			//int salto = pow(2,nivel-1);
-			//printf("t%d merge t%d\n", k, k+salto);
-			printf("merge arestas de t%d com vetor de t%d\n", k+salto, k);
-			//k= 2*salto;
-			//int num = 2*(j)*pow(j,2);
 
-			//printf("t%d\n",  num   );
-
-			//k = salto+1;
-			// arestas da thread
-				//printf("\n");
-	// imprime todas as arestas
-			//printf("arestas de t%d\n", k+salto);
-
-
-
-
-	//printf("Vetor dfs de cada thread:\n");
-
-	// imprime vetor dfs para debug
+			//printf("merge arestas de t%d com vetor de t%d\n", k+salto, k);
 	
-
-	
-
-
-
-
-
 
 
 
@@ -362,10 +392,6 @@ void main() {
 
 			union_(k, qtdVertices, arestaU, arestaV);
 
-			//int zk = find_(0, 7);
-			//printf("find de t2 6 = %d\n", zk);
-			//printf("compara %d com %d\n", vetorDFS[k][arestaU], vetorDFS[k][arestaV]);
-			//vetorDFS[i][j]
 
 
 
@@ -379,11 +405,11 @@ void main() {
 	}
 
 		//imrpime so pra debug
-			printf("apos merge, vetor t%d [", k);
-		for (int j = 0; j < qtdVertices; j++) {
-			printf("%d ", vetorDFS[k][j]);
-		}
-			printf("]\n");
+		// 	printf("apos merge, vetor t%d [", k);
+		// for (int j = 0; j < qtdVertices; j++) {
+		// 	printf("%d ", vetorDFS[k][j]);
+		// }
+		// 	printf("]\n");
 
 	//atualiza e aumenta a lista de arestas
 	matrizVertThread[k][1] = matrizVertThread[k+salto][1];
@@ -467,9 +493,12 @@ void push(grafo_t G[], int val1, int val2) {
 }
 
 
-void DFS_Visita(grafo_t G[], int i, int tBegin, int tLast){
+void DFS_Visita(grafo_t G[], int i, int tBegin, int tLast, int** matrizArestas){
 
 	
+
+
+
 	G[i].cor = 'C';
 
 	// coloca no vetor quem é o pai
@@ -484,6 +513,20 @@ void DFS_Visita(grafo_t G[], int i, int tBegin, int tLast){
 
 		int u = i;
 		int v = current->val;
+
+
+
+		// adiciona a aresta na matriz de arestas
+		if(vetorDFS[tID][v]!=root){
+			//printf("<%d,%d>\n", u, v);
+		
+		matrizArestas[qtdArestasDFS][0] = u;
+		matrizArestas[qtdArestasDFS][1] = v;
+		qtdArestasDFS++;
+
+
+		}
+
 		//printf("vi o %d\n", v);
 		vetorDFS[tID][v]=root;
 		//printf("proximo e o %d\n", v);
@@ -491,10 +534,92 @@ void DFS_Visita(grafo_t G[], int i, int tBegin, int tLast){
 
 		if(G[v].cor == 'B'){
 			G[v].pai = u;
+			
 			if(v >= tBegin && v <= tLast) {
 				//printf("estou entrando no %d\n", v);
+					// coloca de volta a primeira linha
 
-				DFS_Visita(G, v, tBegin, tLast);
+
+				DFS_Visita(G, v, tBegin, tLast, matrizArestas);
+			}
+		}
+
+		current = current->next;
+	}
+
+	G[i].cor = 'P';
+}
+
+int find_(int th, int p) {
+	return vetorDFS[th][p];
+}
+
+void union_(int th, int qtdVertices, int p, int q) {
+	int pID = find_(th, p);
+	int qID = find_(th, q);
+
+	// se os pais sao iguais, ja estao no mesmo componente
+	if(pID == qID)
+		return;
+
+	// faz union de dois vertices
+	// percorre o vetor para atualiar todos os pais
+	for(int i=0; i<qtdVertices; i++) {
+		if(vetorDFS[th][i] == pID || vetorDFS[th][i] == qID) {
+			// da o minimo para o pai por motivos de padronizacao
+			vetorDFS[th][i] = MINIMO(pID, qID);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void DFS(grafo_t G[], int i, int tBegin, int tLast, int vPai, int thID){
+
+	
+	G[i].cor = 'C';
+
+	// coloca no vetor quem é o pai
+	resultadoDFS[thID][i]=vPai;
+
+	//printf("colocando %d de pai em %d\n", root, i);
+
+	node_t * current = G[i].next;
+
+	while (current != NULL) {
+
+
+		int u = i;
+		int v = current->val;
+		//printf("th%d vi o %d\n", thID,v);
+		resultadoDFS[thID][v]=vPai;
+		//printf("proximo e o %d\n", v);
+
+
+		if(G[v].cor == 'B'){
+			G[v].pai = u;
+	
+			if(v >= tBegin && v <= tLast) {
+				//printf("estou entrando no %d\n", v);
+				
+				DFS(G, v, tBegin, tLast, vPai, thID);
 			}
 		}
 
