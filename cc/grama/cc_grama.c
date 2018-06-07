@@ -41,7 +41,9 @@ int main()
 	int **matrizEntrada;
 	int qtdVertices, qtdArestas, thID, piso, teto, qtdTeto;
 	int i, j, vPai, vFinal, vInicial=0;
-	int nThread = 4;
+	
+	// define a quantidade de threads disponível
+	int nThread = omp_get_max_threads();
 
 	// vetor que guarda informações auxiliares para as threads
 	// quantidade de vértice; vértice inicial; vértice final 
