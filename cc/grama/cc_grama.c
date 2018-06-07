@@ -40,7 +40,8 @@ int main()
 	// declaração de variáveis
 	int **matrizEntrada;
 	int qtdVertices, qtdArestas, thID, piso, teto, qtdTeto;
-	int i, j, vPai, vFinal, vInicial=0;
+	int i, j, k, vPai, vFinal, vInicial=0;
+	int qtdExecucoes, salto, nivel=1;
 	
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
@@ -170,6 +171,26 @@ int main()
 			printf("[%d;%d] ", structAresta[i][j][0], structAresta[i][j][1]);
 		}
 		printf("\n");
+	}
+
+	// calcula a quantidade de níveis da árvore de execução
+	qtdExecucoes = log2(nThread);
+
+	// para cada nível da árvore
+	printf("\nordem dos union-find\n");
+	for(i=qtdExecucoes; i>0; i--)
+	{
+		k=0;
+		salto = pow(2,nivel)/2;
+
+		// execução de um par de threads (union-find)
+		for(j=0; j < (pow(2,i-1)); j++)
+		{
+			k = 2*j*salto;
+			printf("union-find de t%d com t%d\n", k, k+salto);
+		}
+
+		nivel++;
 	}
 
 	// TEM QUE DESALOCAR AS COISAS
