@@ -46,6 +46,13 @@ int main()
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
 
+	// é necessário que o número de threads seja potência de 2
+	if(ceil(log2(nThread)) != floor(log2(nThread)))
+	{
+		printf("O número de threads [%d] não é potência de 2!\n", nThread);
+		return 0;
+	}
+
 	// vetor que guarda informações auxiliares para as threads
 	// quantidade de vértice; vértice inicial; vértice final 
 	int infoThread[nThread][3];
