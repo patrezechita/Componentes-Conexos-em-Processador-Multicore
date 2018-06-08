@@ -193,7 +193,7 @@ int main()
 		salto = pow(2,nivel)/2;
 
 		// executa em paralelo um nível da árvore
-		#pragma omp parallel for private(thID, j, k, tEsq, tDir, u, v) //num_threads(8)
+		#pragma omp parallel for private(thID, j, k, tEsq, tDir, u, v)
 		for(thID=0; thID<nThread; thID++)
 		{
 			// todos os union find deste nível
