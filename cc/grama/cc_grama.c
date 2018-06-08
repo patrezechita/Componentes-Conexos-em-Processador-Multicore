@@ -42,6 +42,7 @@ int main()
 	int qtdVertices, qtdArestas, thID, piso, teto, qtdTeto;
 	int i, j, k, vPai, vFinal, vInicial=0;
 	int qtdExecucoes, salto, nivel=1;
+	int tEsq, tDir, p, u, v;
 	
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
@@ -187,24 +188,58 @@ int main()
 	printf("\nordem dos union-find\n");
 	for(i=qtdExecucoes; i>0; i--)
 	{
+		// cálculo auxiliar para os índices
 		k=0;
 		salto = pow(2,nivel)/2;
 
-		// execução de um par de threads (union-find)
-		for(j=0; j < (pow(2,i-1)); j++)
+		// executa em paralelo um nível da árvore
+		#pragma omp parallel for private(thID, j, k, tEsq, tDir, u, v) //num_threads(8)
+		for(thID=0; thID<nThread; thID++)
 		{
-			k = 2*j*salto;
-			printf("union-find de t%d com t%d\n", k, k+salto);
+			// todos os union find deste nível
+			for(j=0; j < (pow(2,i-1)); j++)
+			{
+				// cálcula os índices
+				k = 2*j*salto;
+				tEsq = k;
+				tDir = k+salto;
+
+				// se for a thread responsável pelo merge
+				// então faz union find, do contrário
+				// ignora o merge pois não é trabalho dela
+				if (thID==tEsq)
+				{
+					// imprime qual merge está acontecendo, para debug
+					printf("t%d faz UF de t%d com t%d; nivel %d\n", thID, tEsq, tDir, nivel);
+				
+					// para cada aresta na thread da direita
+					// faz union no vetor da thread da esquerda
+					for(p=0; p<qtdStructAresta[tDir]; p++)
+					{
+						u = structAresta[tDir][p][0];
+						v = structAresta[tDir][p][1];
+						union_(tEsq, qtdVertices, u, v);
+					}
+				}
+			}
 		}
 
 		nivel++;
 	}
 
+
+	// imprime o resultado final (thread 0) para debug
+	printf("\nresultado final\nt0 [");
+	for (i = 0; i < qtdVertices; i++)
+	{
+		printf("%d ", resultadoDFS[0][i]);
+	}
+	printf("]\n");
+
 	// TEM QUE DESALOCAR AS COISAS
 	// FAZER ISSO AQUI
 	return 0;
 }
-
 
 // função de busca em profundidade
 void DFS(grafo_t G[], int i, int tBegin, int tLast, int vPai, int thID)
@@ -332,6 +367,7 @@ int find_(int th, int p) {
 void union_(int th, int qtdVertices, int p, int q) {
 	int pID = find_(th, p);
 	int qID = find_(th, q);
+	int aux;
 
 	// se os pais sao iguais, ja estao no mesmo componente
 	if(pID == qID)
@@ -345,4 +381,14 @@ void union_(int th, int qtdVertices, int p, int q) {
 			resultadoDFS[th][i] = MINIMO(pID, qID);
 		}
 	}
+
+	// atualiza  alista de arestas
+	//printf("insere na t%d a aresta <%d;%d>\n", th, p, q);
+	aux = qtdStructAresta[th];
+	structAresta[th][aux][0] = p;
+	structAresta[th][aux][1] = q;
+	qtdStructAresta[th]++;
+	return;
+
+
 }
