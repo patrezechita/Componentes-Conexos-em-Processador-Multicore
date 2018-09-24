@@ -41,9 +41,10 @@ int main()
 	// declaração de variáveis
 	int **matrizEntrada;
 	int qtdVertices, qtdArestas, thID, piso, teto, qtdTeto;
-	int i, j, vPai, vFinal, vInicial=0;
+	int i, vPai, vFinal, vInicial=0;
 	int qtdExecucoes, qtdUnions;
 	int tEsq, tDir, p, u, v;
+	// int j;
 	
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
@@ -214,36 +215,36 @@ int main()
 	// fim da execução em paralelo
 
 	// imprime infoThread para debug
-	printf("\ninfoThread\n");
-	for(i=0; i<nThread; i++)
-	{
-		// thread, quantidade de vértice, vértice inicial e vértice final
-		printf("t%d [%d;%d;%d]\n", i, infoThread[i][0], infoThread[i][1], infoThread[i][2]);
-	}
+	// printf("\ninfoThread\n");
+	// for(i=0; i<nThread; i++)
+	// {
+	// 	// thread, quantidade de vértice, vértice inicial e vértice final
+	// 	printf("t%d [%d;%d;%d]\n", i, infoThread[i][0], infoThread[i][1], infoThread[i][2]);
+	// }
 
 	// imprime vetor dfs para debug
-	printf("\nresultadoDFS\n");
-	for (i = 0; i < nThread; i++)
-	{
-		printf("t%d [", i);
-		for (j = 0; j < qtdVertices; j++)
-		{
-			printf("%d ", resultadoDFS[i][j]);
-		}
-			printf("]\n");
-	}
+	// printf("\nresultadoDFS\n");
+	// for (i = 0; i < nThread; i++)
+	// {
+	// 	printf("t%d [", i);
+	// 	for (j = 0; j < qtdVertices; j++)
+	// 	{
+	// 		printf("%d ", resultadoDFS[i][j]);
+	// 	}
+	// 		printf("]\n");
+	// }
 
 	// imprime structAresta para debug
-	printf("\nstructAresta\n");
-	for (i = 0; i < nThread; i++)
-	{
-		printf("t%d: ", i);
-		for (j = 0; j < qtdStructAresta[i]; j++)
-		{
-			printf("[%d;%d] ", structAresta[i][j][0], structAresta[i][j][1]);
-		}
-		printf("\n");
-	}
+	// printf("\nstructAresta\n");
+	// for (i = 0; i < nThread; i++)
+	// {
+	// 	printf("t%d: ", i);
+	// 	for (j = 0; j < qtdStructAresta[i]; j++)
+	// 	{
+	// 		printf("[%d;%d] ", structAresta[i][j][0], structAresta[i][j][1]);
+	// 	}
+	// 	printf("\n");
+	// }
 
 	// calcula a quantidade de níveis da árvore de execução
 	qtdExecucoes = log2(nThread);
@@ -252,7 +253,7 @@ int main()
 	qtdUnions = nThread/2;
 
 	// para cada nível da árvore
-	printf("\nordem dos union-find\n");
+	// printf("\nordem dos union-find\n");
 	for(i=0; i<qtdExecucoes; i++)
 	{
 		// executa em paralelo um nível da árvore
@@ -264,7 +265,7 @@ int main()
 			tDir = tEsq + pow(2, i);
 
 			// imprime qual merge está acontecendo, para debug
-			printf("core%d faz UF de t%d com t%d; nivel %d\n", thID, tEsq, tDir, i);
+			// printf("core%d faz UF de t%d com t%d; nivel %d\n", thID, tEsq, tDir, i);
 		
 			// para cada aresta na thread da direita
 			// faz union no vetor da thread da esquerda
@@ -281,15 +282,18 @@ int main()
 	}
 
 	// imprime o resultado final (thread 0) para debug
-	printf("\nresultado final\nt0 [");
-	for (i = 0; i < qtdVertices; i++)
-	{
-		printf("%d ", resultadoDFS[0][i]);
-	}
-	printf("]\n");
+	// printf("\nresultado final\nt0 [");
+	// for (i = 0; i < qtdVertices; i++)
+	// {
+	// 	printf("%d ", resultadoDFS[0][i]);
+	// }
+	// printf("]\n");
 
 	// TEM QUE DESALOCAR AS COISAS
 	// FAZER ISSO AQUI
+
+	imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
+
 	return 0;
 }
 
