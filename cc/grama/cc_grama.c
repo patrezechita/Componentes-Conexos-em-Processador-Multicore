@@ -40,8 +40,8 @@ int main()
 	// declaração de variáveis
 	int **matrizEntrada;
 	int qtdVertices, qtdArestas, thID, piso, teto, qtdTeto;
-	int i, j, k, vPai, vFinal, vInicial=0;
-	int qtdExecucoes, salto, nivel=1;
+	int i, j, vPai, vFinal, vInicial=0;
+	int qtdExecucoes, qtdUnions;
 	int tEsq, tDir, p, u, v;
 	
 	// define a quantidade de threads disponível
@@ -184,49 +184,36 @@ int main()
 	// calcula a quantidade de níveis da árvore de execução
 	qtdExecucoes = log2(nThread);
 
+	// calcula quantos UF irá fazer no nivel 0
+	qtdUnions = nThread/2;
+
 	// para cada nível da árvore
 	printf("\nordem dos union-find\n");
-	for(i=qtdExecucoes; i>0; i--)
+	for(i=0; i<qtdExecucoes; i++)
 	{
-		// cálculo auxiliar para os índices
-		k=0;
-		salto = pow(2,nivel)/2;
-
 		// executa em paralelo um nível da árvore
-		#pragma omp parallel for private(thID, j, k, tEsq, tDir, u, v)
-		for(thID=0; thID<nThread; thID++)
+		#pragma omp parallel for private(thID, tEsq, tDir, u, v)
+		for(thID=0; thID<qtdUnions; thID++)
 		{
-			// todos os union find deste nível
-			for(j=0; j < (pow(2,i-1)); j++)
-			{
-				// cálcula os índices
-				k = 2*j*salto;
-				tEsq = k;
-				tDir = k+salto;
+			tEsq = thID * pow(2, (i+1));
+			tDir = tEsq + pow(2, i);
 
-				// se for a thread responsável pelo merge
-				// então faz union find, do contrário
-				// ignora o merge pois não é trabalho dela
-				if (thID==tEsq)
-				{
-					// imprime qual merge está acontecendo, para debug
-					printf("t%d faz UF de t%d com t%d; nivel %d\n", thID, tEsq, tDir, nivel);
-				
-					// para cada aresta na thread da direita
-					// faz union no vetor da thread da esquerda
-					for(p=0; p<qtdStructAresta[tDir]; p++)
-					{
-						u = structAresta[tDir][p][0];
-						v = structAresta[tDir][p][1];
-						union_(tEsq, qtdVertices, u, v);
-					}
-				}
+			// imprime qual merge está acontecendo, para debug
+			printf("core%d faz UF de t%d com t%d; nivel %d\n", thID, tEsq, tDir, i);
+		
+			// para cada aresta na thread da direita
+			// faz union no vetor da thread da esquerda
+			for(p=0; p<qtdStructAresta[tDir]; p++)
+			{
+				u = structAresta[tDir][p][0];
+				v = structAresta[tDir][p][1];
+				union_(tEsq, qtdVertices, u, v);
 			}
 		}
-
-		nivel++;
+		// divide em dois a quantidade de UF para criar somente
+		// a quantidade de threads que precisa (1 por UF)
+		qtdUnions = qtdUnions/2;
 	}
-
 
 	// imprime o resultado final (thread 0) para debug
 	printf("\nresultado final\nt0 [");
