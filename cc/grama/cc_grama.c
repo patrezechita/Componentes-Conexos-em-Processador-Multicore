@@ -30,9 +30,10 @@ void union_(int th, int qtdVertices, int p, int q);
 int find_(int th, int p);
 
 // variáveis globais
-int structAresta[999][999][2]; // falta alocar dinamicamente
+int ***structAresta;
 int **resultadoDFS;
 int *qtdStructAresta;
+int *n_arestas;
 
 // função principal
 int main()
@@ -86,6 +87,69 @@ int main()
 		G[i].pai = -1;
 		G[i].val = i;
 	}
+
+
+
+
+
+
+
+
+// alocação dinamica da nahri, preciso revisar
+
+	int t, a;
+	n_arestas = malloc (nThread * sizeof(int)) ;
+
+	if (n_arestas == NULL)
+	{
+		printf("Erro na alocacao de estrutura de dados\n") ;
+		exit(0) ;
+	}
+
+	structAresta = malloc (nThread * sizeof(int **)) ;
+
+	if (structAresta == NULL)
+	{
+		printf("Erro na alocacao de estrutura de dados\n") ;
+		exit(0) ;
+	}
+
+	for (t = 0 ; t < nThread ; t ++)
+	{
+		n_arestas[t] = 0 ;
+
+		structAresta[t] = malloc ((qtdVertices - 1) * sizeof(int *)) ;
+
+		if (structAresta[t] == NULL)
+		{
+			printf("Erro na alocacao de estrutura de dados\n") ;
+			exit(0) ;
+		}
+
+		for (a = 0 ; a < qtdVertices - 1 ; a ++)
+		{
+			structAresta[t][a] = malloc (2 * sizeof(int)) ;
+
+			if (structAresta[t][a] == NULL)
+			{
+				printf("Erro na alocacao de estrutura de dados\n") ;
+				exit(0) ;
+			}
+		}
+	}
+
+
+
+//fim alocação dinamica da nahri
+
+
+
+
+
+
+
+
+
 
 	// aloca memória para a matriz de vetores resultadoDFS
 	resultadoDFS = malloc(nThread * sizeof(int *));
@@ -195,6 +259,7 @@ int main()
 		#pragma omp parallel for private(thID, tEsq, tDir, u, v)
 		for(thID=0; thID<qtdUnions; thID++)
 		{
+			// calcula os índices de onde será acessado
 			tEsq = thID * pow(2, (i+1));
 			tDir = tEsq + pow(2, i);
 
