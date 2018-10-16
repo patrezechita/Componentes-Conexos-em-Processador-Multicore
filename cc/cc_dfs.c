@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 #include "comum.h"
 
 typedef struct node {
@@ -22,6 +23,8 @@ void DFS_Visita(grafo_t G[], int i);
 
 void main() {
 	int **matrizEntrada, qtdVertices, qtdArestas;
+
+	double tini, tfin, tseq;
 
 	// recebe a matriz de entrada da leitura
 	matrizEntrada = lerEntrada();
@@ -46,6 +49,8 @@ void main() {
 		push(G, matrizEntrada[i][0], matrizEntrada[i][1]);
 		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
 	}
+
+	tini = omp_get_wtime();
 	
 	// DFS
 	// para cada vertice, pintar de branco
@@ -63,7 +68,12 @@ void main() {
 		}
 	}
 
-	imprimeSaida("saida_dfs.txt", vetorDFS, qtdVertices);
+
+	tfin = omp_get_wtime();
+	tseq = tfin - tini;
+	printf("\x1b[31m> TEMPO FINAL SEQ DFS %f SEGs\x1b[0m\n", tseq);
+
+	//imprimeSaida("saida_dfs.txt", vetorDFS, qtdVertices);
 }
 
 void push(grafo_t G[], int val1, int val2) {

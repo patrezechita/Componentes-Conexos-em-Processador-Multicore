@@ -44,6 +44,7 @@ int main()
 	int i, vPai, vFinal, vInicial=0;
 	int qtdExecucoes, qtdUnions;
 	int tEsq, tDir, p, u, v;
+	double tini, tfin, tpar;
 	// int j;
 	
 	// define a quantidade de threads disponível
@@ -81,6 +82,11 @@ int main()
 		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
 	}
 	
+
+
+
+
+
 	// inicializar os vértices para o DFS
 	for(i=0; i<qtdVertices; i++)
 	{
@@ -88,7 +94,6 @@ int main()
 		G[i].pai = -1;
 		G[i].val = i;
 	}
-
 
 
 
@@ -184,6 +189,10 @@ int main()
 		infoThread[i][2] = vFinal;
 		vInicial += infoThread[i][0];
 	}
+
+
+// medicao de tempo
+tini = omp_get_wtime();
 
 	// cada thread inicia o DFS em paralelo
 	#pragma omp parallel for private(thID, vPai, i, vInicial, vFinal) shared(G, infoThread)
@@ -292,7 +301,12 @@ int main()
 	// TEM QUE DESALOCAR AS COISAS
 	// FAZER ISSO AQUI
 
-	imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
+	//medicao de tempo final com alocacao
+	tfin = omp_get_wtime();
+	tpar = tfin - tini;
+	printf("\x1b[31m> TEMPO FINAL GRAMA %f SEGs\x1b[0m\n", tpar);
+
+	//imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
 
 	return 0;
 }
