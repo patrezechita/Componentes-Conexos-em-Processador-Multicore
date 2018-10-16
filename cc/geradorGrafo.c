@@ -23,7 +23,7 @@ int main()
 
 
 
-	int qtdVertices = 12;
+	int qtdVertices = 1200;
 	int qtdArestas = qtdVertices;
 	printf("%d %d\n", qtdVertices, qtdArestas);
 

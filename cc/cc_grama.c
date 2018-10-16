@@ -257,7 +257,7 @@ int main()
 	for(i=0; i<qtdExecucoes; i++)
 	{
 		// executa em paralelo um nível da árvore
-		#pragma omp parallel for private(thID, tEsq, tDir, u, v)
+		#pragma omp parallel for private(thID, tEsq, tDir, u, v, p)
 		for(thID=0; thID<qtdUnions; thID++)
 		{
 			// calcula os índices de onde será acessado
