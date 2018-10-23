@@ -6,8 +6,8 @@
 // densidade varia de 0 a 1
 int main(int argc, char *argv[]) 
 { 
-	int **vetorArestas;
-	int qtdVertices, qtdArestas, num1, num2, i, j, sai;
+	int **vetorArestas, **vetorCompleto;
+	int qtdVertices, qtdArestas, qtdArestasTotal, i, j, aux, num;
 	float densidade, qtdVerticesFinal;
 
 	srand(time(0));
@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 	qtdVertices = atoi(argv[1]);
 	densidade = atof(argv[2]);
 	qtdVerticesFinal = qtdVertices * densidade;
+	qtdArestasTotal = (qtdVertices*(qtdVertices-1))/2;
 	qtdArestas = (qtdVerticesFinal*(qtdVerticesFinal-1))/2;
 
 	// aloca memória para o vetor com arestas
@@ -25,37 +26,51 @@ int main(int argc, char *argv[])
 		vetorArestas[i] = malloc(2 * sizeof(int));
 	}
 
-	i = 0;
-	while(i < qtdArestas)
+	// aloca memória para o vetor auxiliar
+	vetorCompleto = malloc(qtdArestasTotal * sizeof(int *));
+	for(int i=0; i<qtdArestasTotal; i++)
 	{
-		// gera dois números aleatórios
-		num1 = rand() % qtdVertices;
-		num2 = rand() % qtdVertices;
+		vetorCompleto[i] = malloc(2 * sizeof(int));
+	}
 
-		sai=0;
-		// se os números forem iguais, não guardar
-		if(num1 != num2)
-		{	
-			// percorre o vetor procurando se esses números já foram colocados
-			for(j=0; j<=i; j++)
-			{
-				// se já estão no vetor, não guardar
-				if((vetorArestas[j][0] == num1 && vetorArestas[j][1] == num2) || (vetorArestas[j][0] == num2 && vetorArestas[j][1] == num1))
-				{	
-					sai = 1;
-					break;
-				}
-			}
-
-			// se não foram achados, então guardar
-			if(sai == 0)
-			{
-				vetorArestas[i][0] = num1;
-				vetorArestas[i][1] = num2;
-				i++;
-			}
+	// gera todas as combinações de pares de arestas
+	// e povoa vetorCompleto
+	aux = 0;
+	for(i=0; i<qtdVertices; i++)
+	{
+		for(j=i+1; j<qtdVertices; j++)
+		{
+			vetorCompleto[aux][0] = i;
+			vetorCompleto[aux][1] = j;
+			aux++;
 		}
-	} 
+	}
+
+	// escolhe uma posição aleatória de vetorCompleto
+	// e dá para o vetorAresta; caso já tenha pego
+	// ignorar e gerar outra posição aleatória
+	i=0;
+	while(i<qtdArestas)
+	{
+		num = rand() % qtdArestasTotal;
+		if(vetorCompleto[num][0] != -1)
+		{
+			// somente para inverter a ordem as vezes
+			if((rand()%2)==0)
+			{
+				vetorArestas[i][0] = vetorCompleto[num][0];
+				vetorArestas[i][1] = vetorCompleto[num][1];
+			}
+			else
+			{
+				vetorArestas[i][0] = vetorCompleto[num][1];
+				vetorArestas[i][1] = vetorCompleto[num][0];
+			}
+
+			vetorCompleto[num][0] = -1;
+			i++;
+		}
+	}
 
 	// imprime o vetor de arestas
 	printf("%d %d\n", qtdVertices, qtdArestas);
@@ -64,12 +79,19 @@ int main(int argc, char *argv[])
 		printf("%d\n", vetorArestas[i][1]);
 	}
 
-	// desaloca vetor da memória
+	// desaloca vetorAresta da memória
 	for(int i=0; i<qtdArestas; i++)
 	{
 		free(vetorArestas[i]);
 	}
 	free(vetorArestas);
+
+	// desaloca vetorCompleto da memória
+	for(int i=0; i<qtdArestasTotal; i++)
+	{
+		free(vetorCompleto[i]);
+	}
+	free(vetorCompleto);
 
 	return 0; 
 }
