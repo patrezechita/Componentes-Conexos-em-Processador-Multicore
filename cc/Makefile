@@ -1,14 +1,20 @@
 cc:
 	clear
 	@echo "-> Gerando grafo aleatório..."
-	gcc geradorGrafo.c
-	./a.out > grafo.txt
-	@echo "-> Componentes Conexos - DFS"
-	gcc -fopenmp cc_dfs.c
+	gcc geradorGrafo.c -Wall
+	./a.out 500 0.50 > grafo.txt
+	@echo "-> Componentes Conexos - QuickFind"
+	gcc cc_qf.c
 	./a.out
-	@echo "-> Componentes Conexos - QUICKFIND"
-	gcc -fopenmp cc_qf.c
+	@echo "-> Componentes Conexos - DFS"
+	gcc cc_dfs.c
 	./a.out
 	@echo "-> Componentes Conexos - Grama"
-	gcc -fopenmp cc_grama.c -lm
+	gcc -fopenmp cc_grama.c -lm -Wall
 	./a.out
+
+
+	@echo "-> Comparando as saidas..."
+	diff saida_qf.txt saida_dfs.txt
+	diff saida_qf.txt saida_grama.txt
+	diff saida_dfs.txt saida_grama.txt

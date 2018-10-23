@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <omp.h>
 #include "comum.h"
 
 // retorna o minimo entre dois valores
@@ -11,7 +10,6 @@ int find_(int *vetorQF, int p);
 
 void main() {
 	int **matrizEntrada, *vetorQF, qtdVertices, qtdArestas, p, q; 
-	double tini, tfin, tseq;
 
 	// recebe a matriz de entrada da leitura
 	matrizEntrada = lerEntrada();
@@ -28,18 +26,12 @@ void main() {
 		vetorQF[i] = i;
 	}
 
-	tini = omp_get_wtime();
-
 	// para cada aresta, ler o arquivo e chamar union
 	for(int i=1; i<qtdArestas; i++) {
 		union_(vetorQF, qtdVertices, matrizEntrada[i][0], matrizEntrada[i][1]);
 	}
 
-	tfin = omp_get_wtime();
-	tseq = tfin - tini;
-	printf("\x1b[31m> TEMPO FINAL SEQ QUICKFIND %f SEGs\x1b[0m\n", tseq);
-
-	//imprimeSaida("saida_qf.txt", vetorQF, qtdVertices);
+	imprimeSaida("saida_qf.txt", vetorQF, qtdVertices);
 
 	// libera memoria
 	free(vetorQF);
