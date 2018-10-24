@@ -45,6 +45,7 @@ int main()
 	int qtdExecucoes, qtdUnions;
 	int tEsq, tDir, p, u, v;
 	// int j;
+	double tempo_inicial, tempo_final;
 	
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
@@ -62,6 +63,9 @@ int main()
 
 	// recebe a matriz de entrada da leitura
 	matrizEntrada = lerEntrada();
+
+	// comeca a contar o tempo
+	tempo_inicial = omp_get_wtime();
 
 	// guarda a quantidade de vértices e arestas
 	qtdVertices = matrizEntrada[0][0];
@@ -291,6 +295,10 @@ int main()
 
 	// TEM QUE DESALOCAR AS COISAS
 	// FAZER ISSO AQUI
+
+	// termina de contar o tempo
+	tempo_final = omp_get_wtime() - tempo_inicial;
+	printf("\n>>> >>> TEMPO GASTO PELO GRAMA: %.4lf SEGUNDOS\n\n", tempo_final);
 
 	imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
 

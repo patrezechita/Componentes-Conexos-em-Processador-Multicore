@@ -74,7 +74,8 @@ int main(int argc, char *argv[])
 
 	// imprime o vetor de arestas
 	printf("%d %d\n", qtdVertices, qtdArestas);
-	for (i = 0; i < qtdArestas; i++) { 
+	for (i = 0; i < qtdArestas; i++)
+	{ 
 		printf("%d ", vetorArestas[i][0]);
 		printf("%d\n", vetorArestas[i][1]);
 	}

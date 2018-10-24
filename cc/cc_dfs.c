@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "comum.h"
 
 typedef struct node {
@@ -20,11 +21,16 @@ int *vetorDFS;
 void push(grafo_t G[], int val1, int val2);
 void DFS_Visita(grafo_t G[], int i);
 
-void main() {
+int main() {
 	int **matrizEntrada, qtdVertices, qtdArestas;
+	double tempo_total;
+	clock_t tempo_inicial, tempo_final;
 
 	// recebe a matriz de entrada da leitura
 	matrizEntrada = lerEntrada();
+
+	// comeca a contar o tempo
+	tempo_inicial = clock();
 
 	// guarda a quantidade de vertices e arestas
 	qtdVertices = matrizEntrada[0][0];
@@ -63,7 +69,14 @@ void main() {
 		}
 	}
 
+	// termina de contar o tempo
+	tempo_final = clock();
+	tempo_total = (double)(tempo_final - tempo_inicial) / CLOCKS_PER_SEC;
+	printf("\n>>> >>> TEMPO GASTO PELO DFS SEQ: %.4lf SEGUNDOS\n\n", tempo_total);
+
 	imprimeSaida("saida_dfs.txt", vetorDFS, qtdVertices);
+
+	return 0;
 }
 
 void push(grafo_t G[], int val1, int val2) {

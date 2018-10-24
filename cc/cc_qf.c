@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "comum.h"
 
 // retorna o minimo entre dois valores
@@ -8,11 +9,16 @@
 void union_(int *vetorQF, int qtdVertices, int p, int q);
 int find_(int *vetorQF, int p);
 
-void main() {
-	int **matrizEntrada, *vetorQF, qtdVertices, qtdArestas, p, q; 
+int main() {
+	int **matrizEntrada, *vetorQF, qtdVertices, qtdArestas;
+	double tempo_total;
+	clock_t tempo_inicial, tempo_final;
 
 	// recebe a matriz de entrada da leitura
 	matrizEntrada = lerEntrada();
+
+	// comeca a contar o tempo
+	tempo_inicial = clock();
 
 	// guarda a quantidade de vertices e arestas
 	qtdVertices = matrizEntrada[0][0];
@@ -31,11 +37,18 @@ void main() {
 		union_(vetorQF, qtdVertices, matrizEntrada[i][0], matrizEntrada[i][1]);
 	}
 
+	// termina de contar o tempo
+	tempo_final = clock();
+	tempo_total = (double)(tempo_final - tempo_inicial) / CLOCKS_PER_SEC;
+	printf("\n>>> >>> TEMPO GASTO PELO QF SEQ: %.4lf SEGUNDOS\n\n", tempo_total);
+
 	imprimeSaida("saida_qf.txt", vetorQF, qtdVertices);
 
 	// libera memoria
 	free(vetorQF);
 	free(matrizEntrada);
+
+	return 0;
 }
 
 // retorna o pai atual de um vertice do vetor
