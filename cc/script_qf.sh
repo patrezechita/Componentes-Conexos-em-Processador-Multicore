@@ -1,7 +1,6 @@
-v=500
 for i in $(seq 0 0.01 1);
 	do
 	{
-		./geraGrafo $v $i > g$i.txt
+		./cc_qf g$i.txt >> tempo_qf.txt
 	}
 done

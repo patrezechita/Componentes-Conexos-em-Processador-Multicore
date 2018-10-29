@@ -10,3 +10,8 @@ cc:
 
 	gcc -fopenmp cc_grama.c -o cc_grama -lm -Wall
 	./cc_grama grafo.txt
+
+	./script_geraGrafo.sh
+	./script_qf.sh
+	./script_dfs.sh
+	./script_grama.sh
