@@ -1,7 +1,7 @@
-int **lerEntrada() {
+int **lerEntrada(char nomeEntrada[]) {
 	int **matrizEntrada, qtdVertices, qtdArestas;
 	FILE *arqEntrada;
-	arqEntrada = fopen("grafo.txt", "r");
+	arqEntrada = fopen(nomeEntrada, "r");
 	
 	// le a quantidade de vertices e de arestas
 	fscanf(arqEntrada, "%d %d", &qtdVertices, &qtdArestas);

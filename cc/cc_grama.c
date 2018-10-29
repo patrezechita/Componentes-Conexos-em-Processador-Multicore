@@ -36,7 +36,7 @@ int *qtdStructAresta;
 int *n_arestas;
 
 // função principal
-int main()
+int main(int argc, char *argv[])
 {
 	// declaração de variáveis
 	int **matrizEntrada;
@@ -62,7 +62,7 @@ int main()
 	int infoThread[nThread][3];
 
 	// recebe a matriz de entrada da leitura
-	matrizEntrada = lerEntrada();
+	matrizEntrada = lerEntrada(argv[1]);
 
 	// comeca a contar o tempo
 	tempo_inicial = omp_get_wtime();

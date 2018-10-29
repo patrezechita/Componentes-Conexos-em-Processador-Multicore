@@ -21,13 +21,13 @@ int *vetorDFS;
 void push(grafo_t G[], int val1, int val2);
 void DFS_Visita(grafo_t G[], int i);
 
-int main() {
+int main(int argc, char *argv[]) {
 	int **matrizEntrada, qtdVertices, qtdArestas;
 	double tempo_total;
 	clock_t tempo_inicial, tempo_final;
 
 	// recebe a matriz de entrada da leitura
-	matrizEntrada = lerEntrada();
+	matrizEntrada = lerEntrada(argv[1]);
 
 	// comeca a contar o tempo
 	tempo_inicial = clock();

@@ -9,13 +9,13 @@
 void union_(int *vetorQF, int qtdVertices, int p, int q);
 int find_(int *vetorQF, int p);
 
-int main() {
+int main(int argc, char *argv[]) {
 	int **matrizEntrada, *vetorQF, qtdVertices, qtdArestas;
 	double tempo_total;
 	clock_t tempo_inicial, tempo_final;
 
 	// recebe a matriz de entrada da leitura
-	matrizEntrada = lerEntrada();
+	matrizEntrada = lerEntrada(argv[1]);
 
 	// comeca a contar o tempo
 	tempo_inicial = clock();
