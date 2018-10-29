@@ -40,9 +40,9 @@ int main() {
 	// termina de contar o tempo
 	tempo_final = clock();
 	tempo_total = (double)(tempo_final - tempo_inicial) / CLOCKS_PER_SEC;
-	printf("\n>>> >>> TEMPO GASTO PELO QF SEQ: %.4lf SEGUNDOS\n\n", tempo_total);
+	printf("%.4lf\n", tempo_total);
 
-	imprimeSaida("saida_qf.txt", vetorQF, qtdVertices);
+	//imprimeSaida("saida_qf.txt", vetorQF, qtdVertices);
 
 	// libera memoria
 	free(vetorQF);

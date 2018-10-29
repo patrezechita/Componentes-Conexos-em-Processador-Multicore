@@ -298,9 +298,9 @@ int main()
 
 	// termina de contar o tempo
 	tempo_final = omp_get_wtime() - tempo_inicial;
-	printf("\n>>> >>> TEMPO GASTO PELO GRAMA: %.4lf SEGUNDOS\n\n", tempo_final);
+	printf("%.4lf\n", tempo_final);
 
-	imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
+	//imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
 
 	return 0;
 }
