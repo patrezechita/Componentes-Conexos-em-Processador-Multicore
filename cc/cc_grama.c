@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
 
 	// termina de contar o tempo
 	tempo_final = omp_get_wtime() - tempo_inicial;
-	printf("%.4lf\n", tempo_final);
+	printf("grama\t%s\t%.4lf\n", argv[1], tempo_final);
 
 	//imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
 

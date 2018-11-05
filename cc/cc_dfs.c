@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 	// termina de contar o tempo
 	tempo_final = clock();
 	tempo_total = (double)(tempo_final - tempo_inicial) / CLOCKS_PER_SEC;
-	printf("%.4lf\n", tempo_total);
+	printf("dfs\t\t%s\t%.4lf\n", argv[1], tempo_total);
 
 	//imprimeSaida("saida_dfs.txt", vetorDFS, qtdVertices);
 
