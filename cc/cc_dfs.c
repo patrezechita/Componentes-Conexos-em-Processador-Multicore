@@ -3,11 +3,13 @@
 #include <time.h>
 #include "comum.h"
 
+// estrutura da lista de adjacência
 typedef struct node {
 	int val;
 	struct node * next;
 } node_t;
 
+// elemento da lista de adjacência
 typedef struct grafo {
 	int val;
 	char cor;
@@ -15,9 +17,11 @@ typedef struct grafo {
 	struct node * next;
 } grafo_t;
 
+// variaveis globais para simplificar as chamadas de funcoes recursivas
 int root = 0;
 int *vetorDFS;
 
+// declaração de funções
 void push(grafo_t G[], int val1, int val2);
 void DFS_Visita(grafo_t G[], int i);
 
@@ -43,27 +47,32 @@ int main(int argc, char *argv[]) {
 	grafo_t G[qtdVertices];
 
 	// inicializa o grafo
-	for(int i=0; i<qtdVertices; i++) {	
+	for(int i=0; i<qtdVertices; i++)
+	{	
 		G[i].next = NULL;
 	}
 
 	// insere as arestas
-	for(int i=1; i<qtdArestas; i++) {
+	for(int i=1; i<qtdArestas; i++)
+	{
 		push(G, matrizEntrada[i][0], matrizEntrada[i][1]);
 		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
 	}
 	
 	// DFS
 	// para cada vertice, pintar de branco
-	for(int i=0; i<qtdVertices; i++) {
+	for(int i=0; i<qtdVertices; i++)
+	{
 		G[i].cor = 'B';
 		G[i].pai = -1;
 		G[i].val = i;
 	}
 
 	// executa o DFS
-	for(int i=0; i<qtdVertices; i++) {
-		if(G[i].cor == 'B'){
+	for(int i=0; i<qtdVertices; i++)
+	{
+		if(G[i].cor == 'B')
+		{
 			root = i;
 			DFS_Visita(G, i);
 		}
@@ -79,8 +88,12 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-void push(grafo_t G[], int val1, int val2) {
-	if(G[val1].next == NULL){
+// coloca um no no grafo
+void push(grafo_t G[], int val1, int val2)
+{
+	// se for vazio, inserir nessa posicao
+	if(G[val1].next == NULL)
+	{
 		G[val1].next = malloc(sizeof(node_t));
 		G[val1].next->val = val2;
 		G[val1].next->next = NULL;
@@ -89,21 +102,23 @@ void push(grafo_t G[], int val1, int val2) {
 
 	node_t * current = G[val1].next;
 
-	// percorre os no da lista ate chegar no ultimo
-	while (current->next != NULL) {
+	// se nao for vazio percorre os no da lista ate chegar no ultimo
+	while (current->next != NULL)
+	{
 		current = current->next;
 	}
 
-	//aloca um no
+	//aloca o no
 	current->next = malloc(sizeof(node_t));
 	current->next->val = val2;
 	current->next->next = NULL;
 }
 
+// funcao dfs - busca em profundidade
+void DFS_Visita(grafo_t G[], int i)
+{
 
-void DFS_Visita(grafo_t G[], int i){
-
-	
+	// seta o no na cor cinza - esta sendo visitado
 	G[i].cor = 'C';
 
 	// coloca no vetor quem é o pai
@@ -111,19 +126,26 @@ void DFS_Visita(grafo_t G[], int i){
 
 	node_t * current = G[i].next;
 
-	while (current != NULL) {
+	// percore os nos adjacentes em recursao
+	while (current != NULL)
+	{
 
-
+		// variavel auxiliar
 		int u = i;
 		int v = current->val;
 
-		if(G[v].cor == 'B'){
+		// se o no e branco, entao visitar ele
+		if(G[v].cor == 'B')
+		{
 			G[v].pai = u;
+			
+			// chama dfs recursivamente
 			DFS_Visita(G, v);
 		}
 
 		current = current->next;
 	}
 
+	// quando ja visitou todos, setar no com preto
 	G[i].cor = 'P';
 }

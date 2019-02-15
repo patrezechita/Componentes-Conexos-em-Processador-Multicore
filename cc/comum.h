@@ -1,4 +1,5 @@
-int **lerEntrada(char nomeEntrada[]) {
+int **lerEntrada(char nomeEntrada[])
+{
 	int **matrizEntrada, qtdVertices, qtdArestas;
 	FILE *arqEntrada;
 	arqEntrada = fopen(nomeEntrada, "r");
@@ -9,7 +10,8 @@ int **lerEntrada(char nomeEntrada[]) {
 
 	// aloca memoria para a matriz Nx2
 	matrizEntrada = malloc(qtdArestas * sizeof(int *));
-	for (int i = 0; i < qtdArestas; i++) {
+	for (int i = 0; i < qtdArestas; i++)
+	{
 		matrizEntrada[i] = malloc(2 * sizeof(int));
 	}
 
@@ -18,32 +20,38 @@ int **lerEntrada(char nomeEntrada[]) {
 	matrizEntrada[0][1] = qtdArestas;
 
 	// le o resto do arquivo
-	for(int i=1; i<qtdArestas; i++) {
+	for(int i=1; i<qtdArestas; i++)
+	{
 		fscanf(arqEntrada, "%d %d", &matrizEntrada[i][0], &matrizEntrada[i][1]);
 	}
 
 	return matrizEntrada;
 }
 
-void imprimeSaida(char nomeSaida[], int vetorSaida[], int tamVetor) {
+void imprimeSaida(char nomeSaida[], int vetorSaida[], int tamVetor)
+{
 	FILE *arqSaida;
 	arqSaida = fopen (nomeSaida,"w");
 	int vetorQtdCC[tamVetor], cc;
 
 	// preenche o vetor auxiliar com 0
-	for(int i=0; i<tamVetor; i++) {
+	for(int i=0; i<tamVetor; i++)
+	{
 		vetorQtdCC[i]=0;
 	}
 
 	// da 1 para cada indice que achar
-	for(int i=0; i<tamVetor; i++) {
+	for(int i=0; i<tamVetor; i++)
+	{
 		vetorQtdCC[vetorSaida[i]]=1;
 	}
 
 	// conta os indices, sera o numero de componentes
 	cc = 0;
-	for(int i=0; i<tamVetor; i++) {
-		if(vetorQtdCC[i]==1) {
+	for(int i=0; i<tamVetor; i++)
+	{
+		if(vetorQtdCC[i]==1)
+		{
 			cc++;
 		}
 	}
@@ -52,7 +60,8 @@ void imprimeSaida(char nomeSaida[], int vetorSaida[], int tamVetor) {
 	fprintf(arqSaida, "%d\n", cc);
 
 	// imprime o vetor no arquivo de saida
-	for(int i=0; i<tamVetor; i++) {
+	for(int i=0; i<tamVetor; i++)
+	{
 		fprintf(arqSaida, "%d %d\n", i, vetorSaida[i]);
 	}
 }

@@ -1,4 +1,4 @@
-declare -a densidade=("0.01" "0.10" "0.25" "0.50" "0.75" "1.00")
+declare -a densidade=("0.10" "0.25" "0.50" "0.75" "1.00")
 declare -a grafo=("500")
 
 ## geraGrafo

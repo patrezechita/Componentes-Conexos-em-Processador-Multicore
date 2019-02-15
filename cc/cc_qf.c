@@ -9,7 +9,8 @@
 void union_(int *vetorQF, int qtdVertices, int p, int q);
 int find_(int *vetorQF, int p);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	int **matrizEntrada, *vetorQF, qtdVertices, qtdArestas;
 	double tempo_total;
 	clock_t tempo_inicial, tempo_final;
@@ -28,12 +29,14 @@ int main(int argc, char *argv[]) {
 	vetorQF = (int *)malloc(qtdVertices * sizeof(int));
 
 	// inicizaliza o vetor, cada vertice é seu proprio pai
-	for(int i=0; i<qtdVertices; i++) {
+	for(int i=0; i<qtdVertices; i++)
+	{
 		vetorQF[i] = i;
 	}
 
 	// para cada aresta, ler o arquivo e chamar union
-	for(int i=1; i<qtdArestas; i++) {
+	for(int i=1; i<qtdArestas; i++)
+	{
 		union_(vetorQF, qtdVertices, matrizEntrada[i][0], matrizEntrada[i][1]);
 	}
 
@@ -44,7 +47,7 @@ int main(int argc, char *argv[]) {
 
 	//imprimeSaida("saida_qf.txt", vetorQF, qtdVertices);
 
-	// libera memoria
+	// libera memoria (matrizEntrada e inicializada em comum.h)
 	free(vetorQF);
 	free(matrizEntrada);
 
@@ -52,7 +55,8 @@ int main(int argc, char *argv[]) {
 }
 
 // retorna o pai atual de um vertice do vetor
-int find_(int *vetorQF, int p) {
+int find_(int *vetorQF, int p)
+{
 	return vetorQF[p];
 }
 
@@ -67,8 +71,10 @@ void union_(int *vetorQF, int qtdVertices, int p, int q) {
 
 	// faz union de dois vertices
 	// percorre o vetor para atualiar todos os pais
-	for(int i=0; i<qtdVertices; i++) {
-		if(vetorQF[i] == pID || vetorQF[i] == qID) {
+	for(int i=0; i<qtdVertices; i++)
+	{
+		if(vetorQF[i] == pID || vetorQF[i] == qID)
+		{
 			// da o minimo para o pai por motivos de padronizacao
 			vetorQF[i] = MINIMO(pID, qID);
 		}
