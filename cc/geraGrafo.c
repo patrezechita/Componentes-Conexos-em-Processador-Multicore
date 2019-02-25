@@ -11,11 +11,24 @@ int main(int argc, char *argv[])
 	int qtdVertices, qtdArestasPossiveis, qtdArestasDesejadas;
 	float densidade;
 	
-	// cálculo da quantidade de arestas a serem processadas
+	// recebe os argumentos
 	qtdVertices = atoi(argv[1]);
 	densidade = atof(argv[2]);
-	qtdArestasPossiveis = (qtdVertices*(qtdVertices-1))/2;
-	qtdArestasDesejadas = qtdArestasPossiveis * densidade;
+	
+	// se a densidade for 0, então queremos um grafo árvore
+	// número de vértices iguais ao número de arestas
+	if(densidade == 0.0)
+	{
+		qtdArestasPossiveis = (qtdVertices*(qtdVertices-1))/2;
+		qtdArestasDesejadas = qtdVertices;
+	}
+
+	// do contrário, calcula normalmente as arestas
+	else
+	{
+		qtdArestasPossiveis = (qtdVertices*(qtdVertices-1))/2;
+		qtdArestasDesejadas = qtdArestasPossiveis * densidade;
+	}
 
 	// alocação de memória para o vetor com as arestas
 	vetorArestas = malloc(qtdArestasPossiveis * sizeof(int *));
