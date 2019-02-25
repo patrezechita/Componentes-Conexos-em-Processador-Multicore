@@ -93,31 +93,10 @@ int main(int argc, char *argv[])
 		G[i].val = i;
 	}
 
-
-
-
-
-
-
-
-// alocação dinamica da nahri, preciso revisar
-
+	// aloca memoria para a estrutura principal
 	int t, a;
 	n_arestas = malloc (nThread * sizeof(int)) ;
-
-	if (n_arestas == NULL)
-	{
-		printf("Erro na alocacao de estrutura de dados\n") ;
-		exit(0) ;
-	}
-
 	structAresta = malloc (nThread * sizeof(int **)) ;
-
-	if (structAresta == NULL)
-	{
-		printf("Erro na alocacao de estrutura de dados\n") ;
-		exit(0) ;
-	}
 
 	for (t = 0 ; t < nThread ; t ++)
 	{
@@ -125,36 +104,11 @@ int main(int argc, char *argv[])
 
 		structAresta[t] = malloc ((qtdVertices - 1) * sizeof(int *)) ;
 
-		if (structAresta[t] == NULL)
-		{
-			printf("Erro na alocacao de estrutura de dados\n") ;
-			exit(0) ;
-		}
-
 		for (a = 0 ; a < qtdVertices - 1 ; a ++)
 		{
 			structAresta[t][a] = malloc (2 * sizeof(int)) ;
-
-			if (structAresta[t][a] == NULL)
-			{
-				printf("Erro na alocacao de estrutura de dados\n") ;
-				exit(0) ;
-			}
 		}
 	}
-
-
-
-//fim alocação dinamica da nahri
-
-
-
-
-
-
-
-
-
 
 	// aloca memória para a matriz de vetores resultadoDFS
 	resultadoDFS = malloc(nThread * sizeof(int *));
@@ -293,8 +247,19 @@ int main(int argc, char *argv[])
 	// }
 	// printf("]\n");
 
-	// TEM QUE DESALOCAR AS COISAS
-	// FAZER ISSO AQUI
+	// desalocação de memória
+	free(n_arestas) ;
+
+	for (t = 0 ; t < nThread ; t ++)
+	{
+		for (a = 0 ; a < qtdVertices - 1 ; a ++)
+		{
+			free(structAresta[t][a]) ;
+		}
+		free(structAresta[t]) ;
+	}
+
+	free(structAresta) ;
 
 	// termina de contar o tempo
 	tempo_final = omp_get_wtime() - tempo_inicial;
