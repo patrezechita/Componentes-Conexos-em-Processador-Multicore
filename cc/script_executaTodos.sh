@@ -1,12 +1,12 @@
-declare -a densidade=("0.10" "0.25" "0.50" "0.75" "1.00")
-declare -a grafo=("500")
+declare -a densidade=("0.0" "0.01" "0.10" "0.25" "0.50" "0.75" "1.0")
+declare -a grafo=("100")
 
 ## geraGrafo
 for i in "${densidade[@]}"
 do
 	for j in "${grafo[@]}"
 	do
-		./geraGrafo $j $i > "g$j d$i.txt"
+		./geraGrafo $j $i > "g${j}d${i}.txt"
 	done
 done
 
@@ -15,7 +15,7 @@ for i in "${densidade[@]}"
 do
 	for j in "${grafo[@]}"
 	do
-		./cc_dfs "g$j d$i.txt" >> tempo.txt
+		./cc_dfs "g${j}d${i}.txt" >> tempo.txt
 	done
 done
 
@@ -24,7 +24,7 @@ for i in "${densidade[@]}"
 do
 	for j in "${grafo[@]}"
 	do
-		./cc_qf "g$j d$i.txt" >> tempo.txt
+		./cc_qf "g${j}d${i}.txt" >> tempo.txt
 	done
 done
 
@@ -33,6 +33,6 @@ for i in "${densidade[@]}"
 do
 	for j in "${grafo[@]}"
 	do
-		./cc_grama "g$j d$i.txt" >> tempo.txt
+		./cc_grama "g${j}d${i}.txt" >> tempo.txt
 	done
 done
