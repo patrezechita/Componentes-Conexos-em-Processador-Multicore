@@ -44,8 +44,8 @@ int main(int argc, char *argv[])
 	int i, vPai, vFinal, vInicial=0;
 	int qtdExecucoes, qtdUnions;
 	int tEsq, tDir, p, u, v;
-	// int j;
-	double tempo_inicial, tempo_final;
+	int t, a;
+	double tempo_inicial, tempo_final, tempo_inicial_sem_aloc, tempo_final_sem_aloc;
 	
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
@@ -66,38 +66,14 @@ int main(int argc, char *argv[])
 
 	// comeca a contar o tempo
 	tempo_inicial = omp_get_wtime();
-
+	
 	// guarda a quantidade de vértices e arestas
 	qtdVertices = matrizEntrada[0][0];
 	qtdArestas = matrizEntrada[0][1];
 
-	// cria e inicializa a lista de adjacência
-	grafo_t G[qtdVertices];
-	for(i=0; i<qtdVertices; i++)
-	{	
-		G[i].next = NULL;
-	}
-
-	// insere as arestas na lista de adjacência
-	for(i=1; i<qtdArestas; i++)
-	{
-		push(G, matrizEntrada[i][0], matrizEntrada[i][1]);
-		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
-	}
-	
-	// inicializar os vértices para o DFS
-	for(i=0; i<qtdVertices; i++)
-	{
-		G[i].cor = 'B';
-		G[i].pai = -1;
-		G[i].val = i;
-	}
-
 	// aloca memoria para a estrutura principal
-	int t, a;
 	n_arestas = malloc (nThread * sizeof(int)) ;
 	structAresta = malloc (nThread * sizeof(int **)) ;
-
 	for (t = 0 ; t < nThread ; t ++)
 	{
 		n_arestas[t] = 0 ;
@@ -119,6 +95,31 @@ int main(int argc, char *argv[])
 
 	// aloca memória para o vetor qtdStructArestas
 	qtdStructAresta = malloc(nThread * sizeof(int *));
+
+	// cria e inicializa a lista de adjacência
+	grafo_t G[qtdVertices];
+	for(i=0; i<qtdVertices; i++)
+	{	
+		G[i].next = NULL;
+	}
+
+	// inicializar os vértices para o DFS
+	for(i=0; i<qtdVertices; i++)
+	{
+		G[i].cor = 'B';
+		G[i].pai = -1;
+		G[i].val = i;
+	}
+
+	// comeca a contar o tempo sem alocacao e sem inicializacao
+	tempo_inicial_sem_aloc = omp_get_wtime();
+
+	// insere as arestas na lista de adjacência
+	for(i=1; i<qtdArestas; i++)
+	{
+		push(G, matrizEntrada[i][0], matrizEntrada[i][1]);
+		push(G, matrizEntrada[i][1], matrizEntrada[i][0]);
+	}
 
 	// calcula o piso e o teto para dividir os vértices
 	piso = floor((float)qtdVertices/nThread);
@@ -172,38 +173,6 @@ int main(int argc, char *argv[])
 	}
 	// fim da execução em paralelo
 
-	// imprime infoThread para debug
-	// printf("\ninfoThread\n");
-	// for(i=0; i<nThread; i++)
-	// {
-	// 	// thread, quantidade de vértice, vértice inicial e vértice final
-	// 	printf("t%d [%d;%d;%d]\n", i, infoThread[i][0], infoThread[i][1], infoThread[i][2]);
-	// }
-
-	// imprime vetor dfs para debug
-	// printf("\nresultadoDFS\n");
-	// for (i = 0; i < nThread; i++)
-	// {
-	// 	printf("t%d [", i);
-	// 	for (j = 0; j < qtdVertices; j++)
-	// 	{
-	// 		printf("%d ", resultadoDFS[i][j]);
-	// 	}
-	// 		printf("]\n");
-	// }
-
-	// imprime structAresta para debug
-	// printf("\nstructAresta\n");
-	// for (i = 0; i < nThread; i++)
-	// {
-	// 	printf("t%d: ", i);
-	// 	for (j = 0; j < qtdStructAresta[i]; j++)
-	// 	{
-	// 		printf("[%d;%d] ", structAresta[i][j][0], structAresta[i][j][1]);
-	// 	}
-	// 	printf("\n");
-	// }
-
 	// calcula a quantidade de níveis da árvore de execução
 	qtdExecucoes = log2(nThread);
 
@@ -239,17 +208,11 @@ int main(int argc, char *argv[])
 		qtdUnions = qtdUnions/2;
 	}
 
-	// imprime o resultado final (thread 0) para debug
-	// printf("\nresultado final\nt0 [");
-	// for (i = 0; i < qtdVertices; i++)
-	// {
-	// 	printf("%d ", resultadoDFS[0][i]);
-	// }
-	// printf("]\n");
+	// termina de contar o tempo sem alocacao e sem inicializacao
+	tempo_final_sem_aloc = omp_get_wtime() - tempo_inicial_sem_aloc;
 
 	// desalocação de memória
-	free(n_arestas) ;
-
+	free(n_arestas);
 	for (t = 0 ; t < nThread ; t ++)
 	{
 		for (a = 0 ; a < qtdVertices - 1 ; a ++)
@@ -263,8 +226,10 @@ int main(int argc, char *argv[])
 
 	// termina de contar o tempo
 	tempo_final = omp_get_wtime() - tempo_inicial;
-	printf("grama\t%s\t%.4lf\n", argv[1], tempo_final);
+	printf("gramaCOM\t%s\t%.4lf\n", argv[1], tempo_final);
+	printf("gramaSEM\t%s\t%.4lf\n", argv[1], tempo_final_sem_aloc);
 
+	// usa essa funcao pra imprimir a saida e verificar o resultado do algoritmo
 	//imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
 
 	return 0;
@@ -323,50 +288,11 @@ void DFS(grafo_t G[], int i, int tBegin, int tLast, int vPai, int thID)
 	G[i].cor = 'P';
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void push(grafo_t G[], int val1, int val2) {
-	if(G[val1].next == NULL){
+// funcao que insere um no no grafo
+void push(grafo_t G[], int val1, int val2) 
+{
+	if(G[val1].next == NULL)
+	{
 		G[val1].next = malloc(sizeof(node_t));
 		G[val1].next->val = val2;
 		G[val1].next->next = NULL;
@@ -376,7 +302,8 @@ void push(grafo_t G[], int val1, int val2) {
 	node_t * current = G[val1].next;
 
 	// percorre os no da lista ate chegar no ultimo
-	while (current->next != NULL) {
+	while (current->next != NULL)
+	{
 		current = current->next;
 	}
 
@@ -386,14 +313,15 @@ void push(grafo_t G[], int val1, int val2) {
 	current->next->next = NULL;
 }
 
-
-
-
-int find_(int th, int p) {
+// retorna o pai do no
+int find_(int th, int p)
+{
 	return resultadoDFS[th][p];
 }
 
-void union_(int th, int qtdVertices, int p, int q) {
+// faz union entre dois vertices
+void union_(int th, int qtdVertices, int p, int q)
+{
 	int pID = find_(th, p);
 	int qID = find_(th, q);
 	int aux;
@@ -404,20 +332,19 @@ void union_(int th, int qtdVertices, int p, int q) {
 
 	// faz union de dois vertices
 	// percorre o vetor para atualiar todos os pais
-	for(int i=0; i<qtdVertices; i++) {
-		if(resultadoDFS[th][i] == pID || resultadoDFS[th][i] == qID) {
+	for(int i=0; i<qtdVertices; i++)
+	{
+		if(resultadoDFS[th][i] == pID || resultadoDFS[th][i] == qID)
+		{
 			// da o minimo para o pai por motivos de padronizacao
 			resultadoDFS[th][i] = MINIMO(pID, qID);
 		}
 	}
 
 	// atualiza  alista de arestas
-	//printf("insere na t%d a aresta <%d;%d>\n", th, p, q);
 	aux = qtdStructAresta[th];
 	structAresta[th][aux][0] = p;
 	structAresta[th][aux][1] = q;
 	qtdStructAresta[th]++;
 	return;
-
-
 }

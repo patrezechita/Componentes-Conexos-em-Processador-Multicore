@@ -1,5 +1,5 @@
-declare -a densidade=("0.0" "0.01" "0.10" "0.25" "0.50" "0.75" "1.0")
-declare -a grafo=("100")
+declare -a densidade=("0.0" "0.33" "0.66" "1.0")
+declare -a grafo=("1000")
 
 ## geraGrafo
 for i in "${densidade[@]}"
