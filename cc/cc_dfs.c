@@ -11,7 +11,7 @@ typedef struct node {
 
 // elemento da lista de adjacência
 typedef struct grafo {
-	int val;
+	//int val; nao ta usando
 	char cor;
 	int pai;
 	struct node * next;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 	{
 		G[i].cor = 'B';
 		G[i].pai = -1;
-		G[i].val = i;
+		//G[i].val = i; nao ta usando
 	}
 
 	// executa o DFS
@@ -91,27 +91,11 @@ int main(int argc, char *argv[]) {
 // coloca um no no grafo
 void push(grafo_t G[], int val1, int val2)
 {
-	// se for vazio, inserir nessa posicao
-	if(G[val1].next == NULL)
-	{
-		G[val1].next = malloc(sizeof(node_t));
-		G[val1].next->val = val2;
-		G[val1].next->next = NULL;
-		return;
-	}
-
 	node_t * current = G[val1].next;
-
-	// se nao for vazio percorre os no da lista ate chegar no ultimo
-	while (current->next != NULL)
-	{
-		current = current->next;
-	}
-
-	//aloca o no
-	current->next = malloc(sizeof(node_t));
-	current->next->val = val2;
-	current->next->next = NULL;
+	
+	G[val1].next = malloc(sizeof(node_t));
+	G[val1].next->val = val2;
+	G[val1].next->next = current;
 }
 
 // funcao dfs - busca em profundidade

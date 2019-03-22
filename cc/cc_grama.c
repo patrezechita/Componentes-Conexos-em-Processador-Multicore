@@ -17,7 +17,7 @@ typedef struct node
 // elemento da lista de adjacência
 typedef struct grafo
 {
-	int val;
+	//int val; não tá usando
 	char cor;
 	int pai;
 	struct node * next;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	int qtdExecucoes, qtdUnions;
 	int tEsq, tDir, p, u, v;
 	int t, a;
-	double tempo_inicial, tempo_final, tempo_inicial_sem_aloc, tempo_final_sem_aloc;
+	double tempo_inicial, tempo_final;
 	
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
@@ -108,11 +108,11 @@ int main(int argc, char *argv[])
 	{
 		G[i].cor = 'B';
 		G[i].pai = -1;
-		G[i].val = i;
+		//G[i].val = i; não ta usando
 	}
 
-	// comeca a contar o tempo sem alocacao e sem inicializacao
-	tempo_inicial_sem_aloc = omp_get_wtime();
+	// // comeca a contar o tempo sem alocacao e sem inicializacao
+	// tempo_inicial_sem_aloc = omp_get_wtime();
 
 	// insere as arestas na lista de adjacência
 	for(i=1; i<qtdArestas; i++)
@@ -208,8 +208,8 @@ int main(int argc, char *argv[])
 		qtdUnions = qtdUnions/2;
 	}
 
-	// termina de contar o tempo sem alocacao e sem inicializacao
-	tempo_final_sem_aloc = omp_get_wtime() - tempo_inicial_sem_aloc;
+	// // termina de contar o tempo sem alocacao e sem inicializacao
+	// tempo_final_sem_aloc = omp_get_wtime() - tempo_inicial_sem_aloc;
 
 	// desalocação de memória
 	free(n_arestas);
@@ -226,8 +226,8 @@ int main(int argc, char *argv[])
 
 	// termina de contar o tempo
 	tempo_final = omp_get_wtime() - tempo_inicial;
-	printf("gramaCOM\t%s\t%.4lf\n", argv[1], tempo_final);
-	printf("gramaSEM\t%s\t%.4lf\n", argv[1], tempo_final_sem_aloc);
+	printf("grama\t%s\t%.4lf\n", argv[1], tempo_final);
+	// printf("gramaSEM\t%s\t%.4lf\n", argv[1], tempo_final_sem_aloc);
 
 	// usa essa funcao pra imprimir a saida e verificar o resultado do algoritmo
 	//imprimeSaida("saida_grama.txt", resultadoDFS[0], qtdVertices);
@@ -291,26 +291,11 @@ void DFS(grafo_t G[], int i, int tBegin, int tLast, int vPai, int thID)
 // funcao que insere um no no grafo
 void push(grafo_t G[], int val1, int val2) 
 {
-	if(G[val1].next == NULL)
-	{
-		G[val1].next = malloc(sizeof(node_t));
-		G[val1].next->val = val2;
-		G[val1].next->next = NULL;
-		return;
-	}
-
 	node_t * current = G[val1].next;
-
-	// percorre os no da lista ate chegar no ultimo
-	while (current->next != NULL)
-	{
-		current = current->next;
-	}
-
-	//aloca um no
-	current->next = malloc(sizeof(node_t));
-	current->next->val = val2;
-	current->next->next = NULL;
+	
+	G[val1].next = malloc(sizeof(node_t));
+	G[val1].next->val = val2;
+	G[val1].next->next = current;
 }
 
 // retorna o pai do no

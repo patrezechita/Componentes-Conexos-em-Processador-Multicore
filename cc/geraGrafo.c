@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	// troca aleatóriamente o índice de todas as N primeiras posições
 	// sendo N o número de arestas desejadas
 	// srand(time(0));
-	srand(424242);
+	srand(424242); //pra gerar o mesmo grafo sempre
 	for (i = 0; i < qtdArestasDesejadas; i++)
 	{ 
 		r = rand() % qtdArestasPossiveis;
