@@ -4,28 +4,17 @@
 \usepackage{graphicx,url}
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
-\usepackage[latin1]{inputenc}  
-
+\usepackage{lipsum}
+%\usepackage[latin1]{inputenc}  
+\usepackage{amsmath}
+\usepackage[portuguese,ruled,vlined]{algorithm2e}
      
 \sloppy
 
-\title{Instructions for Authors of SBC Conferences\\ Papers and Abstracts}
-
-\author{Luciana P. Nedel\inst{1}, Rafael H. Bordini\inst{2}, Flávio Rech
-  Wagner\inst{1}, Jomi F. Hübner\inst{3} }
-
-
-\address{Instituto de Informática -- Universidade Federal do Rio Grande do Sul
-  (UFRGS)\\
-  Caixa Postal 15.064 -- 91.501-970 -- Porto Alegre -- RS -- Brazil
-\nextinstitute
-  Department of Computer Science -- University of Durham\\
-  Durham, U.K.
-\nextinstitute
-  Departamento de Sistemas e Computação\\
-  Universidade Regional de Blumenal (FURB) -- Blumenau, SC -- Brazil
-  \email{\{nedel,flavio\}@inf.ufrgs.br, R.Bordini@durham.ac.uk,
-  jomi@inf.furb.br}
+\title{Componentes Conexos em Processador Multicore}
+\author{Patreze A. Chita \inst{1}, Nahri. B. Moreano\inst{1}}
+\address{Faculdade de Computação -- Universidade Federal do Mato Grosso do Sul (UFMS) \\ Caixa Postal 549 -- 79.070.900 -- Campo Grande -- MS -- Brazil
+\email{patrezechita@gmail.com, nahri@facom.ufms.br}
 }
 
 \begin{document} 
@@ -50,6 +39,47 @@
   página do artigo.
 \end{resumo}
 
+\section{Introdução}
+\lipsum[1]
+
+\section{Algoritmo Sequencial e Paralelo para Componentes Conexos}
+
+\begin{algorithm}
+    \DontPrintSemicolon
+    \caption{Componentes conexos usando busca em prof. -- Sequencial}
+    \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
+    \ComponentesConexos{$(G=(V,E))$}
+	{
+        $nComponentes \gets 0$\; 
+        \ParaCada{$v\acute{e}rtice\ u \in V$}
+        {
+            $visitado[u] \gets FALSO$\;
+        }
+    
+        \ParaCada{$v\acute{e}rtice\ u \in V$}
+        {
+            \Se{$visitado[u] = FALSO$}
+            {
+                $\textbf{DFS}(u)$\;
+                $nComponentes \gets nComponentes + 1$\;
+            }
+        }
+    }
+    
+    \SetKwProg{DFS}{DFS}{}{}
+    \DFS{$(u)$}
+    {
+        $componente[u] \gets nComponentes$\; 
+        $visitado[u] \gets VERDADEIRO$\;
+        \ParaCada{$v\acute{e}rtice\ v \in Adj[u]$}
+        {
+            \Se{$visitado[v] = FALSO$}
+            {
+                $\textbf{DFS}(v)$\;
+            }
+        }
+    }
+\end{algorithm}
 
 \section{General Information}
 
