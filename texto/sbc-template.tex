@@ -43,43 +43,75 @@
 \lipsum[1]
 
 \section{Algoritmo Sequencial e Paralelo para Componentes Conexos}
+\lipsum[1]
+\subsection{Algoritmo Sequencial Baseado em Busca em Profundidade}
+
+algoritmo 1.
 
 \begin{algorithm}
     \DontPrintSemicolon
     \caption{Componentes conexos usando busca em prof. -- Sequencial}
-    \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
-    \ComponentesConexos{$(G=(V,E))$}
+    \SetKwProg{ComponentesConexos}{ComponentesConexosSequencial}{}{}
+    \ComponentesConexos{$(G=(V,\ A))$}
 	{
-        $nComponentes \gets 0$\; 
-        \ParaCada{$v\acute{e}rtice\ u \in V$}
-        {
-            $visitado[u] \gets FALSO$\;
-        }
+        $nComponente \gets 0$\;
+        $visitado[v] \gets FALSO \mid \forall v \in V$\;
+        %$visitado[v] \gets FALSO,\ \{ \forall\ v \mid v \in V\}$\;
+        %\ParaCada{$v\acute{e}rtice\ u \in V$}
+        %{
+        %    $visitado[u] \gets FALSO$\;
+        %}
     
-        \ParaCada{$v\acute{e}rtice\ u \in V$}
+        \ParaCada{$v\acute{e}rtice\ v \in V$}
         {
-            \Se{$visitado[u] = FALSO$}
+            \Se{$visitado[v] = FALSO$}
             {
-                $\textbf{DFS}(u)$\;
-                $nComponentes \gets nComponentes + 1$\;
+                $\textbf{DFS}(v)$\;
+                $nComponente \gets nComponente\ +\ 1$\;
             }
         }
     }
     
     \SetKwProg{DFS}{DFS}{}{}
-    \DFS{$(u)$}
+    \DFS{$(v\acute{e}rtice\ v)$}
     {
-        $componente[u] \gets nComponentes$\; 
-        $visitado[u] \gets VERDADEIRO$\;
-        \ParaCada{$v\acute{e}rtice\ v \in Adj[u]$}
+        $componente[v] \gets nComponente$\; 
+        $visitado[v] \gets VERDADEIRO$\;
+        \ParaCada{$v\acute{e}rtice\ u \in Adj[v]$}
         {
-            \Se{$visitado[v] = FALSO$}
+            \Se{$visitado[u] = FALSO$}
             {
-                $\textbf{DFS}(v)$\;
+                $\textbf{DFS}(u)$\;
             }
         }
     }
 \end{algorithm}
+
+\subsection{Algoritmo Paralelo Baseado em Busca em Profundidade e nas Operações Union/Find}
+
+algoritmo 2.
+
+\begin{algorithm}
+    \DontPrintSemicolon
+    %\caption{Componentes conexos -- Paralelo \cite[gramma]}
+    \SetKwProg{ComponentesConexosPar}{ComponentesConexosPar}{}{}
+    \ComponentesConexosPar{$(G=(V,E))$}
+    {
+        $p \gets$ número de processadores\;
+        Divide vértices de $V$ em $p$ partes de $\sim|V|/p$ vértices\;
+        \ParaCada{processador $p_i$ em paralelo}
+        {
+            $V_i \gets$ vértices de $V$ alocados a $p_i$\;
+            $G_i \gets$ subgrafo de $G$ induzido por $V_i$\;
+            Realiza DFS($G_i$) produzindo floresta $F_i$\;
+        }
+
+        Une florestas $F_i$, par a par, em paralelo, produzindo floresta $F$\;
+        
+        \tcp{Para cada árvore $A$ $\in$ $F$, vértices de $A$ estão no mesmo componente}
+    }
+\end{algorithm}
+
 
 \section{General Information}
 
