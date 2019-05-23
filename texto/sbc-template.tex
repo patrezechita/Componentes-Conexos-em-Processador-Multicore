@@ -11,6 +11,10 @@
 %\usepackage[portuguese,ruled,vlined,linesnumbered]{algorithm2e}
 \usepackage{blindtext}
 \usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{adjustbox}
      
 \sloppy
 
@@ -243,6 +247,40 @@
 \caption{Exemplo de Execução do Algoritmo 3}
 \label{fig:alg3}
 \end{figure}
+
+{\color{gray}\lipsum[1]}
+
+\begin{table}[h!]
+    \resizebox{\textwidth}{!} { 
+        \begin{tabular}{cccc}
+		%THREAD0
+			$t_0$ & 
+		%LISTA
+			$Adj[t_0]=\left\{\begin{tabular}{l}$0\to8$\\$1\to2$\\$2\to1\to7\to3$\end{tabular}\right.$ &
+		%COMPONENTE
+			\begin{tabular}{cccccccccc}
+				\multicolumn{10}{l}{$componente[t_0]=$}\\
+				%$_0$ & $_1$ & $_2$ & $_3$ & $_4$ & $_5$ & $_6$ & $_7$ & $_8$ & $_9$\\
+				\hline
+				\multicolumn{1}{|c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & 
+				\multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{5} & 
+				\multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & 
+				\multicolumn{1}{c|}{9}\\
+				\hline
+				\arrayrulecolor{white}\hline %pra dar um espacinho
+				$^0$ & $^1$ & $^2$ & $^3$ & $^4$ & $^5$ & $^6$ & $^7$ & $^8$ & $^9$
+			\end{tabular} & 
+		%FLORESTA
+			$\begin{tabular}{l}
+				$floresta[t_0] =$\\
+				\{(0,2), (0,3), (1,4)\}
+			\end{tabular}$ \\
+            %\hline
+            %A&B&C&D\\ 
+        \end{tabular}
+  	}  
+  	\caption{Exemplo de Execução do Algoritmo 3 [INACABADO]}
+\end{table}
 
 \section{Resultados e Análise}
 
