@@ -135,28 +135,46 @@
     {
         $nTh \gets n\acute{u}mero\ de\ threads$\;
 
+		\;
+		\tcp{opção 1}
         \Para{$t \gets 0\ \Ate\ (nTh - 1)$}
         {
-        	%$verticeInicial[t] \gets t \times (\sim \frac{|V|}{nTh})$\;
-        	%$verticeFinal[t] \gets verticeInicial[t] + (\sim \frac{|V|}{nTh})-1$\;
         	$verticeInicial[t] \gets t \times \lfloor \frac{|V|}{nTh} \rceil$\;
         	$verticeFinal[t] \gets verticeInicial[t] + \lfloor \frac{|V|}{nTh} \rceil-1$\;
         }
         
-        %$nVerticeExtra \gets |V| - (\lfloor \frac{|V|}{nTh} \rfloor \times nTh)$\;
-        %\Para{$t \gets 0$ \Ate $(nTh-1)$}
-        %{
-        %    \eSe{$t < $nVerticeExtra}
-        %    {
-        %        $verticeInicial[t] \gets t \times \lceil \frac{|V|}{nTh} \rceil$\;
-        %        $verticeFinal[t] \gets verticeInicial[t] + \lceil \frac{|V|}{nTh} \rceil - 1$\;
-        %    }
-        %   {
-        %        $verticeInicial[t] \gets t \times \lfloor \frac{|V|}{nTh} \rfloor + nVerticeExtra$\;
-        %        $verticeFinal[t] \gets verticeIncial[t] + \lfloor \frac{|V|}{nTh} \rfloor - 1$\;
-        %    }
-        %}
+        \;
+		\tcp{opção 2}
+ 		\Para{$t \gets 0\ \Ate\ (nTh - 1)$}
+        {
+        	$verticeInicial[t] \gets t \times (\sim \frac{|V|}{nTh})$\;
+        	$verticeFinal[t] \gets verticeInicial[t] + (\sim \frac{|V|}{nTh})-1$\;
+        }
         
+        \;
+		\tcp{opção 3}
+        \Para{$t \gets 0\ \Ate\ (nTh - 1)$}
+        {
+        	$verticeInicial[t] \gets t \times \frac{|V|}{nTh}$\;
+        	$verticeFinal[t] \gets verticeInicial[t] +\frac{|V|}{nTh}-1$\;
+        }
+        
+        \;
+		\tcp{opção 4}
+        $nVerticeExtra \gets |V| - (\lfloor \frac{|V|}{nTh} \rfloor \times nTh)$\;
+        \Para{$t \gets 0$ \Ate $(nTh-1)$}
+        {
+            \eSe{$t < nVerticeExtra$}
+            {
+                $verticeInicial[t] \gets t \times \lceil \frac{|V|}{nTh} \rceil$\;
+                $verticeFinal[t] \gets verticeInicial[t] + \lceil \frac{|V|}{nTh} \rceil - 1$\;
+            }
+           {
+                $verticeInicial[t] \gets t \times \lfloor \frac{|V|}{nTh} \rfloor + nVerticeExtra$\;
+                $verticeFinal[t] \gets verticeIncial[t] + \lfloor \frac{|V|}{nTh} \rfloor - 1$\;
+            }
+        }
+        %\;
         %\tcp{Realiza DFS em paralelo}
         %$inicializa\ compnente[][]$\;
         \ForPar{$t \gets 0\ \Ate\ (nTh - 1)$}
