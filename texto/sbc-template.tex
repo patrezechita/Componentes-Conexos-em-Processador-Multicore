@@ -314,7 +314,34 @@
 	\begin{minipage}[b]{0.5\textwidth}
 		\resizebox{\textwidth}{!}
 		{
-			\input{tab1.tex}
+			\begin{tabular}{ccll}
+\begin{tabular}{ll}
+\multicolumn{2}{l}{vInicial}                  \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{0} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_1$} & \multicolumn{1}{l|}{3} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{6} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_3$} & \multicolumn{1}{l|}{8} \\ \cline{2-2} 
+\end{tabular} & \begin{tabular}{ll}
+\multicolumn{2}{l}{vFinal}                  \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{2} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_1$} & \multicolumn{1}{l|}{5} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{7} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_3$} & \multicolumn{1}{l|}{9} \\ \cline{2-2} 
+\end{tabular} & \begin{tabular}{ll}
+\multicolumn{2}{l}{floresta}                                  \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{\{$\emptyset$\}} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_1$} & \multicolumn{1}{l|}{\{$\emptyset$\}} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{\{$\emptyset$\}} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_3$} & \multicolumn{1}{l|}{\{$\emptyset$\}} \\ \cline{2-2} 
+\end{tabular} & \begin{tabular}{lllllllllll}
+\multicolumn{11}{l}{componente}                                                                                                                                                                                                                                                      \\
+                           & $ _0$                  & $ _1$                  & $ _2$                  & $ _3$                  & $ _4$                  & $ _5$                  & $ _6$                  & $ _7$                  & $ _8$                  & $ _9$                  \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{2} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_1$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{2} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{2} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_3$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{2} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\end{tabular}
+\end{tabular}
 		}
 	    \caption{antes dfs}
   	\end{minipage}
@@ -324,7 +351,24 @@
 	\begin{minipage}[b]{0.5\textwidth}
 		\resizebox{\textwidth}{!}
 		{
-			\input{tab1.tex}
+			\begin{tabular}{cc}
+			\begin{tabular}{ll}
+\multicolumn{2}{l}{floresta}                                                                                                    \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{\{(0,2),(0,3),(1,4)\}}                                                             \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_1$} & \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}\{(0,3),(3,2),(6,3),\\ (1,4),(4,5),(7,4)\}\end{tabular}} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{\{(3,6),(4,7)\}}                                                                   \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_3$} & \multicolumn{1}{l|}{\{(8,9)\}}                                                                         \\ \cline{2-2} 
+\end{tabular}
+&
+			\begin{tabular}{lllllllllll}
+\multicolumn{11}{l}{componente}                                                                                                                                                                                                                                                     \\
+                           & $ _0$                  & $ _1$                  & $ _2$                  & $ _3$                  & $ _4$                  & $ _5$                  & $ _6$                  & $ _7$                  & $ _8$                  & $ _9$                  \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_1$} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{2} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_3$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{2} & \multicolumn{1}{l|}{3} & \multicolumn{1}{l|}{4} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{8} \\ \cline{2-11} 
+\end{tabular}
+			\end{tabular}
 		}
 	    \caption{pós dfs}
   	\end{minipage}
@@ -332,7 +376,19 @@
 	\begin{minipage}[b]{0.5\textwidth}
 		\resizebox{\textwidth}{!}
 		{
-			\input{tab1.tex}
+		\begin{tabular}{cc}
+		\begin{tabular}{ll}
+\multicolumn{2}{l}{floresta}                                                                                                    \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}\{(0,2),(0,3),(1,4),\\ (6,3),(4,5),(1,4)\}\end{tabular}} \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{\{(3,6),(4,7),(8,9)\}}                                                             \\ \cline{2-2} 
+\end{tabular} &
+		\begin{tabular}{lllllllllll}
+\multicolumn{11}{l}{componente}                                                                                                                                                                                                                                                     \\
+                           & $ _0$                  & $ _1$                  & $ _2$                  & $ _3$                  & $ _4$                  & $ _5$                  & $ _6$                  & $ _7$                  & $ _8$                  & $ _9$                  \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9} \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_2$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{2} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{5} & \multicolumn{1}{l|}{6} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{8} \\ \cline{2-11} 
+\end{tabular}
+		\end{tabular}
 		}
 	    \caption{primeiro merge}
   	\end{minipage}
@@ -343,7 +399,17 @@
 	\begin{minipage}[b]{0.5\textwidth}
 		\resizebox{\textwidth}{!}
 		{
-			\input{tab1.tex}
+			\begin{tabular}{cc}
+			\begin{tabular}{ll}
+\multicolumn{2}{l}{floresta}                                                                                                                \\ \cline{2-2} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}\{(0,2),(0,3),(1,4),\\ (6,3),(4,5),(1,4),\\ (8,9)\}\end{tabular}} \\ \cline{2-2} 
+\end{tabular} &
+\begin{tabular}{lllllllllll}
+\multicolumn{11}{l}{componente}                                                                                                                                                                                                                                                     \\
+                           & $ _0$                  & $ _1$                  & $ _2$                  & $ _3$                  & $ _4$                  & $ _5$                  & $ _6$                  & $ _7$                  & $ _8$                  & $ _9$                  \\ \cline{2-11} 
+\multicolumn{1}{l|}{$t_0$} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{8} \\ \cline{2-11} 
+\end{tabular}
+\end{tabular}
 		}
 	    \caption{segundo merge}
   	\end{minipage}
