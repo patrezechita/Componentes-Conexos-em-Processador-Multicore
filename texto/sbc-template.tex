@@ -59,7 +59,7 @@
 
 {\color{gray}\lipsum[1]}
 
-\begin{algorithm}[H]
+\begin{algorithm}
     \DontPrintSemicolon
     \caption{Algoritmo sequencial para componentes conexos}
     \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
@@ -100,10 +100,9 @@
 
 {\color{gray}\lipsum[1]}
 
-\begin{algorithm}[H]
+\begin{algorithm}
     \DontPrintSemicolon
     \caption{Algoritmo paralelo para componentes conexos}
-    %\caption{Componentes conexos -- Paralelo \cite[gramma]}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
     \ComponentesConexosPar{$(G=(V,E))$}
     {
@@ -126,7 +125,7 @@
 
 {\color{gray}\lipsum[1]}
 
-\begin{algorithm}[H]
+\begin{algorithm}
     \DontPrintSemicolon
     \caption{Implementação do algoritmo paralelo para componentes conexos}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
@@ -149,6 +148,10 @@
             }
         }
         \tcp{Executa DFS em paralelo, gerando $nTh$ florestas}
+        \ParaCada{$v\acute{e}rtice\ v \in V$}
+        {
+            $visitado[v] \gets FALSO$\;
+        }
         \ForPar{$t \gets 0$ \Ate $nTh-1$}
         {
         
@@ -168,7 +171,7 @@
         }
         \tcp{Une pares de florestas em paralelo}
         $nPares \gets \frac{nTh}{2}$\;
-        \Para{$i \gets 0$ \Ate$ \log_2(nTh)-1$}
+        \Para{$i \gets 0$ \Ate $\log_2(nTh)-1$}
         {
             \ForPar{$t \gets 0$ \Ate $nPares-1$}
             {
@@ -206,7 +209,7 @@
     }
 \end{algorithm}
     
-\begin{algorithm}[H]
+\begin{algorithm}
     \DontPrintSemicolon
     \caption{Operações Union e Find}
     \SetKw{Return}{retorna}
@@ -215,10 +218,8 @@
     {
         $vComponente \gets  \textbf{Find}(t,v)$\;
         $uComponente \gets  \textbf{Find}(t,u)$\;
-        $min\gets\textbf{M}\acute{\textbf{\i}}\textbf{nimo}(vComponente,uC
-omponente)$\;
-		$min\gets\textbf{M}\acute{\textbf{a}}\textbf{ximo}(vComponente,uC
-omponente)$\;
+        $min\gets\textbf{M}\acute{\textbf{\i}}\textbf{nimo}(vComponente,uComponente)$\;
+		$max\gets\textbf{M}\acute{\textbf{a}}\textbf{ximo}(vComponente,uComponente)$\;
         \Se{$vComponente \neq uComponente$}
         {
             \ParaCada{$v\acute{e}rtice\ i \in V$}
