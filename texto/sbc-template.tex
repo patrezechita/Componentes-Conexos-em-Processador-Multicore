@@ -61,24 +61,22 @@
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
-    \caption{Implementação do Algoritmo Sequencial para C. C.}
-    \SetKwProg{ComponentesConexos}{sequencialDFS}{}{}
-    \ComponentesConexos{$(G=(V,\ A))$}
+    \caption{Algoritmo sequencial para componentes conexos}
+    \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
+    \ComponentesConexos{($gra\!f\!o\ G=(V,E))$}
 	{
-        $nComponente \gets 0$\;
-        $visitado[v] \gets FALSO \mid \forall v \in V$\;
-        %$visitado[v] \gets FALSO,\ \{ \forall\ v \mid v \in V\}$\;
-        %\ParaCada{$v\acute{e}rtice\ u \in V$}
-        %{
-        %    $visitado[u] \gets FALSO$\;
-        %}
+        $nComponentes \gets 0$\;
+        \ParaCada{$v\acute{e}rtice\ v \in V$}
+        {
+            $visitado[v] \gets FALSO$\;
+        }
     
         \ParaCada{$v\acute{e}rtice\ v \in V$}
         {
             \Se{$visitado[v] = FALSO$}
             {
                 $\textbf{DFS}(v)$\;
-                $nComponente \gets nComponente + 1$\;
+                $nComponentes \gets nComponentes + 1$\;
             }
         }
     }
@@ -86,7 +84,7 @@
     \SetKwProg{DFS}{DFS}{}{}
     \DFS{$(v\acute{e}rtice\ v)$}
     {
-        $componente[v] \gets nComponente$\; 
+        $componente[v] \gets nComponentes$\; 
         $visitado[v] \gets VERDADEIRO$\;
         \ParaCada{$v\acute{e}rtice\ u \in Adj[v]$}
         {
@@ -137,32 +135,6 @@
     \ComponentesConexosPar{$(G=(V,A))$}
     {
         $nTh \gets n\acute{u}mero\ de\ threads$\;
-
-		\;
-		\tcp{opção 1}
-        \Para{$t \gets 0\ \Ate\ (nTh - 1)$}
-        {
-        	$verticeInicial[t] \gets t \times \lfloor \frac{|V|}{nTh} \rceil$\;
-        	$verticeFinal[t] \gets verticeInicial[t] + \lfloor \frac{|V|}{nTh} \rceil-1$\;
-        }
-        
-        \;
-		\tcp{opção 2}
- 		\Para{$t \gets 0\ \Ate\ (nTh - 1)$}
-        {
-        	$verticeInicial[t] \gets t \times (\sim \frac{|V|}{nTh})$\;
-        	$verticeFinal[t] \gets verticeInicial[t] + (\sim \frac{|V|}{nTh})-1$\;
-        }
-        
-        \;
-		\tcp{opção 3}
-        \Para{$t \gets 0\ \Ate\ (nTh - 1)$}
-        {
-        	$verticeInicial[t] \gets t \times \frac{|V|}{nTh}$\;
-        	$verticeFinal[t] \gets verticeInicial[t] +\frac{|V|}{nTh}-1$\;
-        }
-        
-        \;
 		\tcp{opção 4}
         $nVerticeExtra \gets |V| - (\lfloor \frac{|V|}{nTh} \rfloor \times nTh)$\;
         \Para{$t \gets 0$ \Ate $(nTh-1)$}
@@ -247,7 +219,7 @@
         {
             \Para{$i \gets 0\ \Ate\ (|V|-1)$}
             {
-                \Se{$componente[t][i] = fV$ \textbf{ou} $componente[t][i] = fU$}
+                \Se{$componente[t][i] = fV$ \textbf{\upshape ou} $componente[t][i] = fU$}
                 {
                     $componente[t][i] \gets \textbf{M} \acute{\textbf{I}} \textbf{NIMO}(fV,\ fU)$\;
                 }
