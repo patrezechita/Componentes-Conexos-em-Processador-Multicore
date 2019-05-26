@@ -63,7 +63,7 @@
     \DontPrintSemicolon
     \caption{Algoritmo sequencial para componentes conexos}
     \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
-    \ComponentesConexos{($gra\!f\!o\ G=(V,E))$}
+    \ComponentesConexos{$(gra\!f\!o\ G=(V,E))$}
 	{
         $nComponentes \gets 0$\;
         \ParaCada{$v\acute{e}rtice\ v \in V$}
@@ -102,9 +102,9 @@
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
-    \caption{Algoritmo Paralelo para C. C.}
+    \caption{Algoritmo paralelo para componentes conexos}
     %\caption{Componentes conexos -- Paralelo \cite[gramma]}
-    \SetKwProg{ComponentesConexosPar}{paraleloGrama}{}{}
+    \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
     \ComponentesConexosPar{$(G=(V,E))$}
     {
         $p \gets$ número de processadores\;
@@ -128,106 +128,110 @@
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
-    \caption{Implementação do Algoritmo Paralelo para C. C.}
-    \SetKwProg{ComponentesConexosPar}{paraleloPatreze}{}{}
-    \SetKwFor{ForPar}{para cada}{fa\c{c}a em paralelo}{fim para cada}
-    \SetKw{Return}{retorna}
-    \ComponentesConexosPar{$(G=(V,A))$}
+    \caption{Implementação do algoritmo paralelo para componentes conexos}
+    \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
+    \SetKwFor{ForPar}{para}{fa\c{c}a em paralelo}{fim para cada}
+    \ComponentesConexosPar{$(gra\!f\!o\ G=(V,E))$}
     {
+    	\tcp{Divide os vértices pelas threads}
         $nTh \gets n\acute{u}mero\ de\ threads$\;
-		\tcp{opção 4}
-        $nVerticeExtra \gets |V| - (\lfloor \frac{|V|}{nTh} \rfloor \times nTh)$\;
-        \Para{$t \gets 0$ \Ate $(nTh-1)$}
+        $nVerticesExtra \gets |V| - (\lfloor \frac{|V|}{nTh} \rfloor \times nTh)$\;
+        \ForPar{$t \gets 0$ \Ate $nTh-1$}
         {
-            \eSe{$t < nVerticeExtra$}
+            \eSe{$t < nVerticesExtra$}
             {
-                $verticeInicial[t] \gets t \times \lceil \frac{|V|}{nTh} \rceil$\;
-                $verticeFinal[t] \gets verticeInicial[t] + \lceil \frac{|V|}{nTh} \rceil - 1$\;
+                $vInicial[t] \gets t \times \lceil \frac{|V|}{nTh} \rceil$\;
+                $vFinal[t] \gets vInicial[t] + \lceil \frac{|V|}{nTh} \rceil - 1$\;
             }
            {
-                $verticeInicial[t] \gets t \times \lfloor \frac{|V|}{nTh} \rfloor + nVerticeExtra$\;
-                $verticeFinal[t] \gets verticeIncial[t] + \lfloor \frac{|V|}{nTh} \rfloor - 1$\;
+                $vInicial[t] \gets t \times \lfloor \frac{|V|}{nTh} \rfloor + nVerticesExtra$\;
+                $vFinal[t] \gets vIncial[t] + \lfloor \frac{|V|}{nTh} \rfloor - 1$\;
             }
         }
-        %\;
-        %\tcp{Realiza DFS em paralelo}
-        %$inicializa\ compnente[][]$\;
-        \ForPar{$t \gets 0\ \Ate\ (nTh - 1)$}
+        \tcp{Executa DFS em paralelo, gerando $nTh$ florestas}
+        \ForPar{$t \gets 0$ \Ate $nTh-1$}
         {
         
-            %\ParaCada{vértice $v \in V$}
-            %{
-            %    $componente[t][v] \gets v$\;
-            %}
-            $componente[t][v] \gets v \mid \forall v \in V$\;
-            $floresta[t] \gets \emptyset$\;
-            \Para{$v\gets verticeInicial[t]\ \Ate\ verticeFinal[t]$}
+            \ParaCada{$v\acute{e}rtice\ v \in V$}
+            {
+                $componente[t][v] \gets v$\;
+            }
+            $floresta[t] \gets \{\emptyset\}$\;
+            \Para{$v\gets vInicial[t]$ \Ate $vFinal[t]$}
             {
                 \Se{$visitado[v] = FALSO$}
                 {
                     $raiz \gets v$\;
-                    $\textbf{DFS}(t,\ v,\ raiz)$\;
+                    $\textbf{DFS}(t,v,raiz)$\;
                 }
             }
         }
-        
-        %\tcp{Une florestas para a par em paralelo}
+        \tcp{Une pares de florestas em paralelo}
         $nPares \gets \frac{nTh}{2}$\;
-        \Para{$i \gets 0\ \Ate\ (\log_2(nTh)-1)$}
+        \Para{$i \gets 0$ \Ate$ \log_2(nTh)-1$}
         {
-            %\tcp{EXECUÇÃO UNION-FIND EM PARALELO}
-            \ForPar{$t \gets 0\ \Ate\ (nPares-1)$}
+            \ForPar{$t \gets 0$ \Ate $nPares-1$}
             {
                 $thEsq \gets t \times 2^{i+1}$\;
                 $thDir \gets thEsq + 2^i$\;
                 
-                \ParaCada{$(v,\ u) \in floresta[thDir]$}
+                \ParaCada{$aresta\ (v, u) \in floresta[thDir]$}
                 {
-                    $\textbf{UNION}(thEsq,\ v,\ u)$\;
+                    $\textbf{Union}(thEsq,v,u)$\;
                 }
             }
             $nPares \gets \frac{nPares}{2}$\;
         }
     }
     \SetKwProg{DFS}{DFS}{}{}
-    \DFS{$(thread\ t,\ v\acute{e}rtice\ v,\ raiz)$}
+    \DFS{$(thread\ t,\ v\acute{e}rtice\ v,\ v\acute{e}rtice\ raiz)$}
     {
         $componente[t][v] \gets raiz$\;
         
         \ParaCada{$v\acute{e}rtice\ u \in Adj[v]$}
         {
-            $floresta[t] \gets floresta[t] \cup (v,\ u)$\;
+            $floresta[t] \gets floresta[t] \cup \{(v,u)\}$\;
             $componente[t][u] \gets raiz$\;
             
-            \Se{$verticeInicial[t] \le u \le verticeFinal[t]$}
+            \Se{$vInicial[t] \le u$ \textbf{\upshape e} $u
+\le vFinal[t]$}
             {
                 \Se{$visitado[u] = FALSO$}
                 {
-                    $\textbf{DFS}(t,\ u,\ raiz)$\;
+                    $\textbf{DFS}(t,u,raiz)$\;
                 }
             }
         }
         $visitado[v] \gets VERDADEIRO$\;
     }
-    \SetKwProg{UNION}{UNION}{}{}
+\end{algorithm}
+    
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \caption{Operações Union e Find}
+    \SetKw{Return}{retorna}
+    \SetKwProg{UNION}{Union}{}{}
     \UNION{$(thread\ t,\ v\acute{e}rtice\ v,\ v\acute{e}rtice\ u)$}
     {
-        $fV \gets  \textbf{FIND}(t,\ v)$\;
-        $fU \gets  \textbf{FIND}(t,\ u)$\;
-        
-        \Se{$fV \neq fU$}
+        $vComponente \gets  \textbf{Find}(t,v)$\;
+        $uComponente \gets  \textbf{Find}(t,u)$\;
+        $min\gets\textbf{M}\acute{\textbf{\i}}\textbf{nimo}(vComponente,uC
+omponente)$\;
+		$min\gets\textbf{M}\acute{\textbf{a}}\textbf{ximo}(vComponente,uC
+omponente)$\;
+        \Se{$vComponente \neq uComponente$}
         {
-            \Para{$i \gets 0\ \Ate\ (|V|-1)$}
+            \ParaCada{$v\acute{e}rtice\ i \in V$}
             {
-                \Se{$componente[t][i] = fV$ \textbf{\upshape ou} $componente[t][i] = fU$}
+                \Se{$componente[t][i] = max$}
                 {
-                    $componente[t][i] \gets \textbf{M} \acute{\textbf{I}} \textbf{NIMO}(fV,\ fU)$\;
+                    $componente[t][i] \gets min$\;
                 }
             }
-            $floresta[t] \gets floresta[t] \cup (v,\ u)$\;
+            $floresta[t] \gets floresta[t] \cup \{(v,u)\}$\;
         }
     }
-    \SetKwProg{FIND}{FIND}{}{}
+    \SetKwProg{FIND}{Find}{}{}
     \FIND{$(thread\ t,\ v\acute{e}rtice\ v)$}
     {
         \Return $componente[t][v]$\;
