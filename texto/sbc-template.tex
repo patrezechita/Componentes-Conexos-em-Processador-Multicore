@@ -18,6 +18,7 @@
 \usepackage{tikz}
 \usepackage{pgf}
 \usepackage{multirow}
+\usepackage{pgfplots}
      
 \sloppy
 
@@ -59,7 +60,7 @@
 
 {\color{gray}\lipsum[1]}
 
-\begin{algorithm}
+\begin{algorithm}[h]
     \DontPrintSemicolon
     \caption{Algoritmo sequencial para componentes conexos}
     \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
@@ -100,7 +101,7 @@
 
 {\color{gray}\lipsum[1]}
 
-\begin{algorithm}
+\begin{algorithm}[h]
     \DontPrintSemicolon
     \caption{Algoritmo paralelo para componentes conexos}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
@@ -125,7 +126,7 @@
 
 {\color{gray}\lipsum[1]}
 
-\begin{algorithm}
+\begin{algorithm}[h]
     \DontPrintSemicolon
     \caption{Implementação do algoritmo paralelo para componentes conexos}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
@@ -209,7 +210,7 @@
     }
 \end{algorithm}
     
-\begin{algorithm}
+\begin{algorithm}[h]
     \DontPrintSemicolon
     \caption{Operações Union e Find}
     \SetKw{Return}{retorna}
@@ -239,17 +240,139 @@
     }
 \end{algorithm}
 
-{\color{gray}\lipsum[1]}
-
 \section{Resultados e Análise}
 
 {\color{gray}\lipsum[1]}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+				\begin{axis}
+				[
+					title={5k vértices},
+					legend pos=north west,
+					%x tick label style={/pgf/number format/1000 sep=},
+					ylabel={tempo em segundos},
+					%enlargelimits=0.15,
+					ybar,
+					%bar width=7pt,
+					symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%},
+					]
+				]
+			\addplot 
+				coordinates {(5\%,0.0795)(25\%,0.3245)(50\%,0.6293)(75\%,0.8861)(100\%,1.1584)};
+			\addplot 
+				coordinates {(5\%,0.1561)(25\%,0.7321)(50\%,1.4898)(75\%,2.2514)(100\%,2.9988)};
+			\legend{Paralelo, Sequencial}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{legenda}
+    \end{minipage}\hfill%
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+				\begin{axis}
+				[
+					title={25k vértices},
+					legend pos=north west,
+					%x tick label style={/pgf/number format/1000 sep=},
+					ylabel={tempo em segundos},
+					%enlargelimits=0.15,
+					ybar,
+					ybar=5pt,% configures `bar shift'
+				bar width=9pt,
+					nodes near coords,
+					nodes near coords align={vertical},
+					%bar width=7pt,
+					symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%},
+					]
+				]
+			\addplot 
+				coordinates {(5\%,1.6681)(25\%,9.6514)(50\%,19.8564)(75\%,29.1588)(100\%,37.0791)};
+			\addplot 
+				coordinates {(5\%,4.0333)(25\%,24.6417)(50\%,53.7326)(75\%,82.9658)(100\%,112.2789)};
+			\legend{Paralelo, Sequencial}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{legenda}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			\begin{axis}[
+				title={Execução alg par 25k com várias threads},
+				legend pos=north west,
+				xlabel={densidade do grafo},
+				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
+				%symbolic x coords={a,b,c,d},
+				ylabel={tempo em segundos},
+				%xtick=data,
+				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
+				\addplot coordinates {
+					(5\%,2.9733)(25\%,17.3807)(50\%,36.9300)(75\%,56.7824)(100\%,71.7106)
+				};
+				\addplot coordinates {
+					(5\%,2.0330)(25\%,12.3225)(50\%,26.4038)(75\%,40.3008)(100\%,48.8452)
+				};
+				\addplot coordinates {
+					(5\%,1.6745)(25\%,9.7046)(50\%,19.8150)(75\%,29.0185)(100\%,37.0678)
+				};
+			\legend{2 $th$,4 $th$,8 $th$}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{legenda}
+    \end{minipage}\hfill%
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			\begin{axis}[
+				title={speedup paralelo (8th) em relação ao sequencial},
+				legend pos=north west,
+				xlabel={densidade do grafo},
+				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
+				%symbolic x coords={a,b,c,d},
+				ylabel={speedup},
+				%xtick=data,
+				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
+				\addplot coordinates {
+					(5\%,1.96)(25\%,2.26)(50\%,2.37)(75\%,2.54)(100\%,2.59)};
+				\addplot coordinates {
+					(5\%,2.10)(25\%,2.50)(50\%,2.51)(75\%,2.60)(100\%,2.82)};
+				\addplot coordinates {
+					(5\%,2.19)(25\%,2.43)(50\%,2.54)(75\%,2.74)(100\%,2.98)};
+				\addplot coordinates {
+					(5\%,2.42)(25\%,2.55)(50\%,2.71)(75\%,2.85)(100\%,3.03)};
+				%\addplot[const plot,fill={rgb:red,213;green,0;blue,0},draw={rgb:red,213;green,0;blue,0}]coordinates {(5\%,1)(100\%,1)};
+			\legend{5k,10k,15k,25k}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{legenda}
+    \end{minipage}
+\end{figure}
 
 \section{Conclusão}
 
 {\color{gray}\lipsum[1]}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\subcaptionbox{}[.32\textwidth]
 	{
@@ -279,7 +402,7 @@
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \subcaptionbox{}[.32\textwidth]
   {\resizebox{0.3\textwidth}{!}
