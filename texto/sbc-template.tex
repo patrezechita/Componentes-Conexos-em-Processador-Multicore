@@ -176,12 +176,12 @@
         {
             \ForPar{$t \gets 0$ \Ate $nPares-1$}
             {
-                $thEsq \gets t \times 2^{i+1}$\;
-                $thDir \gets thEsq + 2^i$\;
+                $thEsquerda \gets t \times 2^{i+1}$\;
+                $thDireita \gets thEsquerda + 2^i$\;
                 
-                \ParaCada{$aresta\ (v, u) \in floresta[thDir]$}
+                \ParaCada{$aresta\ (v, u) \in floresta[thDireita]$}
                 {
-                    $\textbf{Union}(thEsq,v,u)$\;
+                    $\textbf{Union}(thEsquerda,v,u)$\;
                 }
             }
             $nPares \gets \frac{nPares}{2}$\;
