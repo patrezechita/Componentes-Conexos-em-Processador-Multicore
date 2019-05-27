@@ -128,6 +128,7 @@
 
 \begin{algorithm}[h]
     \DontPrintSemicolon
+    \SetArgSty{textnormal}
     %\SetAlCapNameFnt{\small} %tamanho nome do algoritmo
     \caption{Implementação do algoritmo paralelo para componentes conexos}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
@@ -189,25 +190,24 @@
         }
     }
     \SetKwProg{DFS}{DFS}{}{}
-    \DFS{$(thread\ t,\ v\acute{e}rtice\ v,\ v\acute{e}rtice\ raiz)$}
+    \DFS{(thread t, vértice v, vértice raiz)}
     {
-        $componente[t][v] \gets raiz$\;
+        componente[t][v] $\gets$ raiz\;
         
-        \ParaCada{$v\acute{e}rtice\ u \in Adj[v]$}
+        \ParaCada{vértice u $\in$ Adj[v]}
         {
-            $floresta[t] \gets floresta[t] \cup \{(v,u)\}$\;
-            $componente[t][u] \gets raiz$\;
+            floresta[t] $\gets$ floresta[t] $\cup$ \{(v, u)\}\;
+            componente[t][u] $\gets$ raiz\;
             
-            \Se{$vInicial[t] \le u$ \textbf{\upshape e} $u
-\le vFinal[t]$}
+            \Se{vInicial[t] $\le$ u \textbf{\upshape e} u $\le$ vFinal[t]}
             {
-                \Se{$visitado[u] = F\!also$}
+                \Se{visitado[u] = FALSO}
                 {
-                    $\textbf{DFS}(t,u,raiz)$\;
+                    \textbf{DFS}(t, u, raiz)\;
                 }
             }
         }
-        $visitado[v] \gets V\!erdadeiro$\;
+        visitado[v] $\gets$ VERDADEIRO\;
     }
 \end{algorithm}
     
