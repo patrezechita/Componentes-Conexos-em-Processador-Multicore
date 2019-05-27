@@ -62,36 +62,35 @@
 
 \begin{algorithm}[h]
     \DontPrintSemicolon
+    \SetArgSty{textnormal}
     \caption{Algoritmo sequencial para componentes conexos}
     \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
-    \ComponentesConexos{$(gra\!f\!o\ G=(V,E))$}
+    \ComponentesConexos{(grafo G=(V, E))}
 	{
-        $nComponentes \gets 0$\;
-        \ParaCada{$v\acute{e}rtice\ v \in V$}
+        nComponentes $\gets$ 0\;
+        \ParaCada{vértice v $\in$ V}
         {
-            $visitado[v] \gets F\!also$\;
+            visitado[v] $\gets$ FALSO\;
         }
-    
-        \ParaCada{$v\acute{e}rtice\ v \in V$}
+        \ParaCada{vértice v $\in$ V}
         {
-            \Se{$visitado[v] = F\!also$}
+            \Se{visitado[v] = FALSO}
             {
-                $\textbf{DFS}(v)$\;
-                $nComponentes \gets nComponentes + 1$\;
+                \textbf{DFS}(v)\;
+                nComponentes $\gets$ nComponentes + 1\;
             }
         }
     }
-    
     \SetKwProg{DFS}{DFS}{}{}
-    \DFS{$(v\acute{e}rtice\ v)$}
+    \DFS{(vértice v)}
     {
-        $componente[v] \gets nComponentes$\; 
-        $visitado[v] \gets V\!erdadeiro$\;
-        \ParaCada{$v\acute{e}rtice\ u \in Adj[v]$}
+        componente[v] $\gets$ nComponentes\; 
+        visitado[v] $\gets$ VERDADEIRO\;
+        \ParaCada{vértice u $\in$ Adj[v]}
         {
-            \Se{$visitado[u] = F\!also$}
+            \Se{visitado[u] = FALSO}
             {
-                $\textbf{DFS}(u)$\;
+                \textbf{DFS}(u)\;
             }
         }
     }
