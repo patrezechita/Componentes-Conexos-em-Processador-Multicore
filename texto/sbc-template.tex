@@ -376,7 +376,25 @@
 	\centering
 	\subcaptionbox{}[.32\textwidth]
 	{
-		\includegraphics[width=1\linewidth]{example-image}
+		\resizebox{0.3\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			[scale=1,auto=left,every node/.style={circle,fill=gray!20}]
+				\node (v0) at (0,4) {0};
+				\node (v6) at (0,0) {6};
+				\node (v3) at (0,2) {3};
+				\node (v2) at (2,4) {2};
+				\node (v1) at (6,4) {1};
+				\node (v4) at (6,2) {4};
+				\node (v5) at (4,2) {5};
+				\node (v7) at (6,0) {7};
+				\node (v8) at (2,0) {8};
+				\node (v9) at (4,0) {9};
+				\node [fill=white!0](x) at (0,-1) {}; %vértice invisível para alinhar 
+				\foreach \from/\to in {v0/v3,v3/v6,v3/v2,v0/v2,v1/v4,v4/v5,v4/v7,v8/v9}
+				\draw[line width=1.5pt] (\from) -- (\to);
+			\end{tikzpicture}
+		}
 	}
 	\subcaptionbox{}[.32\textwidth]
 	{
@@ -406,7 +424,21 @@
 \centering
 \subcaptionbox{}[.32\textwidth]
   {\resizebox{0.3\textwidth}{!}
-		  {\includegraphics[width=1\linewidth]{example-image}}}
+		  {			\begin{tikzpicture}
+			[scale=1,auto=left,every node/.style={circle,fill=gray!20}]
+				\node (v0) at (0,4) {0};
+				\node (v6) at (0,0) {6};
+				\node (v3) at (0,2) {3};
+				\node (v2) at (2,4) {2};
+				\node (v1) at (6,4) {1};
+				\node (v4) at (6,2) {4};
+				\node (v5) at (4,2) {5};
+				\node (v7) at (6,0) {7};
+				\node (v8) at (2,0) {8};
+				\node (v9) at (4,0) {9};
+				\foreach \from/\to in {v0/v3,v3/v6,v3/v2,v0/v2,v1/v4,v4/v5,v4/v7,v8/v9}
+				\draw[line width=1.5pt] (\from) -- (\to);
+			\end{tikzpicture}}}
 \subcaptionbox{}[.32\textwidth]
   {\resizebox{0.2122\textwidth}{!}
 		  {\begin{tabular}{llcllllllll}
