@@ -69,12 +69,12 @@
         $nComponentes \gets 0$\;
         \ParaCada{$v\acute{e}rtice\ v \in V$}
         {
-            $visitado[v] \gets FALSO$\;
+            $visitado[v] \gets F\!also$\;
         }
     
         \ParaCada{$v\acute{e}rtice\ v \in V$}
         {
-            \Se{$visitado[v] = FALSO$}
+            \Se{$visitado[v] = F\!also$}
             {
                 $\textbf{DFS}(v)$\;
                 $nComponentes \gets nComponentes + 1$\;
@@ -86,10 +86,10 @@
     \DFS{$(v\acute{e}rtice\ v)$}
     {
         $componente[v] \gets nComponentes$\; 
-        $visitado[v] \gets VERDADEIRO$\;
+        $visitado[v] \gets V\!erdadeiro$\;
         \ParaCada{$v\acute{e}rtice\ u \in Adj[v]$}
         {
-            \Se{$visitado[u] = FALSO$}
+            \Se{$visitado[u] = F\!also$}
             {
                 $\textbf{DFS}(u)$\;
             }
@@ -152,7 +152,7 @@
         \tcp{Executa DFS em paralelo, gerando $nTh$ florestas}
         \ParaCada{$v\acute{e}rtice\ v \in V$}
         {
-            $visitado[v] \gets FALSO$\;
+            $visitado[v] \gets F\!also$\;
         }
         \ForPar{$t \gets 0$ \Ate $nTh-1$}
         {
@@ -164,7 +164,7 @@
             $floresta[t] \gets \{\emptyset\}$\;
             \Para{$v\gets vInicial[t]$ \Ate $vFinal[t]$}
             {
-                \Se{$visitado[v] = FALSO$}
+                \Se{$visitado[v] = F\!also$}
                 {
                     $raiz \gets v$\;
                     $\textbf{DFS}(t,v,raiz)$\;
@@ -201,13 +201,13 @@
             \Se{$vInicial[t] \le u$ \textbf{\upshape e} $u
 \le vFinal[t]$}
             {
-                \Se{$visitado[u] = FALSO$}
+                \Se{$visitado[u] = F\!also$}
                 {
                     $\textbf{DFS}(t,u,raiz)$\;
                 }
             }
         }
-        $visitado[v] \gets VERDADEIRO$\;
+        $visitado[v] \gets V\!erdadeiro$\;
     }
 \end{algorithm}
     
