@@ -19,6 +19,7 @@
 \usepackage{pgf}
 \usepackage{multirow}
 \usepackage{pgfplots}
+\usepackage{amsmath}
      
 \sloppy
 
@@ -212,31 +213,32 @@
     
 \begin{algorithm}[h]
     \DontPrintSemicolon
+    \SetArgSty{textnormal}
     \caption{Operações Union e Find}
     \SetKw{Return}{retorna}
     \SetKwProg{UNION}{Union}{}{}
-    \UNION{$(thread\ t,\ v\acute{e}rtice\ v,\ v\acute{e}rtice\ u)$}
+    \UNION{(thread t, vértice v, vértice u)}
     {
-        $vComponente \gets  \textbf{Find}(t,v)$\;
-        $uComponente \gets  \textbf{Find}(t,u)$\;
-        $min\gets\textbf{M}\acute{\textbf{\i}}\textbf{nimo}(vComponente,uComponente)$\;
-		$max\gets\textbf{M}\acute{\textbf{a}}\textbf{ximo}(vComponente,uComponente)$\;
-        \Se{$vComponente \neq uComponente$}
+        vComponente $\gets$ \textbf{Find}(t, v)\;
+        uComponente $\gets$ \textbf{Find}(t, u)\;
+        min $\gets$ \textbf{Mínimo}(vComponente, uComponente)\;
+		max $\gets$ \textbf{Máximo}(vComponente, uComponente)\;
+        \Se{vComponente $\neq$ uComponente}
         {
-            \ParaCada{$v\acute{e}rtice\ i \in V$}
+            \ParaCada{vértice i $\in$ V}
             {
-                \Se{$componente[t][i] = max$}
+                \Se{componente[t][i] = max}
                 {
-                    $componente[t][i] \gets min$\;
+                    componente[t][i] $\gets$ min\;
                 }
             }
-            $floresta[t] \gets floresta[t] \cup \{(v,u)\}$\;
+            floresta[t] $\gets$ floresta[t] $\cup$ \{(v, u)\}\;
         }
     }
     \SetKwProg{FIND}{Find}{}{}
-    \FIND{$(thread\ t,\ v\acute{e}rtice\ v)$}
+    \FIND{(thread t, vértice v)}
     {
-        \Return $componente[t][v]$\;
+        \Return componente[t][v]\;
     }
 \end{algorithm}
 
