@@ -66,7 +66,7 @@
     \SetArgSty{textnormal}
     \caption{Algoritmo sequencial para componentes conexos}
     \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
-    \ComponentesConexos{(grafo G=(V, E))}
+    \ComponentesConexos{{\normalfont(grafo G = (V, E))}}
 	{
         nComponentes $\gets$ 0\;
         \ParaCada{vértice v $\in$ V}
@@ -83,7 +83,7 @@
         }
     }
     \SetKwProg{DFS}{DFS}{}{}
-    \DFS{(vértice v)}
+    \DFS{{\normalfont(vértice v)}}
     {
         componente[v] $\gets$ nComponentes\; 
         visitado[v] $\gets$ VERDADEIRO\;
@@ -105,7 +105,7 @@
     \DontPrintSemicolon
     \caption{Algoritmo paralelo para componentes conexos}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
-    \ComponentesConexosPar{$(G=(V,E))$}
+    \ComponentesConexosPar{{\normalfont(grafo G = (V, E))}}
     {
         $p \gets$ número de processadores\;
         Divide vértices de $V$ em $p$ partes de $\sim|V|/p$ vértices\;
@@ -129,13 +129,15 @@
 \begin{algorithm}[h]
     \DontPrintSemicolon
     \SetArgSty{textnormal}
+    \newcommand\mycommfont[1]{\small\ttfamily{#1}}
+	\SetCommentSty{mycommfont}
     %\SetAlCapNameFnt{\small} %tamanho nome do algoritmo
     \caption{Implementação do algoritmo paralelo para componentes conexos}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
     \SetKwFor{ForPar}{para}{fa\c{c}a em paralelo}{fim para cada}
-    \ComponentesConexosPar{(grafo G=(V, E))}
+    \ComponentesConexosPar{{\normalfont(grafo G = (V, E))}}
     {
-    	\tcp{divide os vértices pelas threads}
+    	\tcp{Dividir os vértices pelas threads}
         nTh $\gets$ número de threads\;
         nVerticesExtra $\gets |\text{V}|$ -- ($\lfloor \frac{|\text{V}|}{\text{nTh}} \rfloor$ $\times$ nTh)\;
         \ForPar{$t \gets 0$ \Ate $nTh-1$}
@@ -150,7 +152,7 @@
                 vFinal[t] $\gets$ vIncial[t] + $\lfloor\frac{|\text{V}|}{\text{nTh}}\rfloor$ -- 1\;
             }
         }
-        \tcp{executa DFS em paralelo, gerando nTh florestas}
+        \tcp{Executar DFS em paralelo, gerando nTh florestas}
         \ParaCada{vértice v $\in$ V}
         {
             visitado[v] $\gets$ FALSO\;
@@ -171,7 +173,7 @@
                 }
             }
         }
-        \tcp{une pares de florestas em paralelo}
+        \tcp{Unir pares de florestas em paralelo}
         nPares $\gets \frac{\text{nTh}}{\text{2}}$\;
         \Para{i $\gets$ 0 \Ate $\log_2\!\text{(nTh)}$ -- 1}
         {
@@ -189,7 +191,7 @@
         }
     }
     \SetKwProg{DFS}{DFS}{}{}
-    \DFS{(thread t, vértice v, vértice raiz)}
+    \DFS{{\normalfont(thread t, vértice v, vértice raiz)}}
     {
         componente[t][v] $\gets$ raiz\;
         
@@ -216,7 +218,7 @@
     \caption{Operações Union e Find}
     \SetKw{Return}{retorna}
     \SetKwProg{UNION}{Union}{}{}
-    \UNION{(thread t, vértice v, vértice u)}
+    \UNION{{\normalfont(thread t, vértice v, vértice u)}}
     {
         vComponente $\gets$ \textbf{Find}(t, v)\;
         uComponente $\gets$ \textbf{Find}(t, u)\;
@@ -235,7 +237,7 @@
         }
     }
     \SetKwProg{FIND}{Find}{}{}
-    \FIND{(thread t, vértice v)}
+    \FIND{{\normalfont(thread t, vértice v)}}
     {
         \Return componente[t][v]\;
     }
