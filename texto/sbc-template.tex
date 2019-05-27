@@ -133,60 +133,59 @@
     \caption{Implementação do algoritmo paralelo para componentes conexos}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
     \SetKwFor{ForPar}{para}{fa\c{c}a em paralelo}{fim para cada}
-    \ComponentesConexosPar{$(gra\!f\!o\ G=(V,E))$}
+    \ComponentesConexosPar{(grafo G=(V, E))}
     {
-    	\tcp{Divide os vértices pelas threads}
-        $nTh \gets n\acute{u}mero\ de\ threads$\;
-        $nVerticesExtra \gets |V| - (\lfloor \frac{|V|}{nTh} \rfloor \times nTh)$\;
+    	\tcp{divide os vértices pelas threads}
+        nTh $\gets$ número de threads\;
+        nVerticesExtra $\gets |\text{V}|$ -- ($\lfloor \frac{|\text{V}|}{\text{nTh}} \rfloor$ $\times$ nTh)\;
         \ForPar{$t \gets 0$ \Ate $nTh-1$}
         {
-            \eSe{$t < nVerticesExtra$}
+            \eSe{t $<$ nVerticesExtra}
             {
-                $vInicial[t] \gets t \times \lceil \frac{|V|}{nTh} \rceil$\;
-                $vFinal[t] \gets vInicial[t] + \lceil \frac{|V|}{nTh} \rceil - 1$\;
+                vInicial[t] $\gets$ t $\times$ $\lceil\frac{|\text{V}|}{\text{nTh}}\rceil$\;
+                vFinal[t] $\gets$ vInicial[t] + $\lceil\frac{|\text{V}|}{\text{nTh}}\rceil$ -- 1\;
             }
            {
-                $vInicial[t] \gets t \times \lfloor \frac{|V|}{nTh} \rfloor + nVerticesExtra$\;
-                $vFinal[t] \gets vIncial[t] + \lfloor \frac{|V|}{nTh} \rfloor - 1$\;
+                vInicial[t] $\gets$ t $\times$ $\lfloor\frac{|\text{V}|}{\text{nTh}}\rfloor$ + nVerticesExtra\;
+                vFinal[t] $\gets$ vIncial[t] + $\lfloor\frac{|\text{V}|}{\text{nTh}}\rfloor$ -- 1\;
             }
         }
-        \tcp{Executa DFS em paralelo, gerando $nTh$ florestas}
-        \ParaCada{$v\acute{e}rtice\ v \in V$}
+        \tcp{executa DFS em paralelo, gerando nTh florestas}
+        \ParaCada{vértice v $\in$ V}
         {
-            $visitado[v] \gets F\!also$\;
+            visitado[v] $\gets$ FALSO\;
         }
-        \ForPar{$t \gets 0$ \Ate $nTh-1$}
+        \ForPar{t $\gets$ 0 \Ate nTh -- 1}
         {
-        
-            \ParaCada{$v\acute{e}rtice\ v \in V$}
+            \ParaCada{vértice v $\in$ V}
             {
-                $componente[t][v] \gets v$\;
+                componente[t][v] $\gets$ v\;
             }
-            $floresta[t] \gets \{\emptyset\}$\;
-            \Para{$v\gets vInicial[t]$ \Ate $vFinal[t]$}
+            floresta[t] $\gets$ \{$\emptyset$\}\;
+            \Para{v $\gets$ vInicial[t] \Ate vFinal[t]}
             {
-                \Se{$visitado[v] = F\!also$}
+                \Se{visitado[v] = FALSO}
                 {
-                    $raiz \gets v$\;
-                    $\textbf{DFS}(t,v,raiz)$\;
+                    raiz $\gets$ v\;
+                    \textbf{DFS}(t, v, raiz)\;
                 }
             }
         }
-        \tcp{Une pares de florestas em paralelo}
-        $nPares \gets \frac{nTh}{2}$\;
-        \Para{$i \gets 0$ \Ate $\log_2(nTh)-1$}
+        \tcp{une pares de florestas em paralelo}
+        nPares $\gets \frac{\text{nTh}}{\text{2}}$\;
+        \Para{i $\gets$ 0 \Ate $\log_2\!\text{(nTh)}$ -- 1}
         {
-            \ForPar{$t \gets 0$ \Ate $nPares-1$}
+            \ForPar{t $\gets$ 0 \Ate nPares -- 1}
             {
-                $thEsquerda \gets t \times 2^{i+1}$\;
-                $thDireita \gets thEsquerda + 2^i$\;
+                thEsquerda $\gets$ t $\times$ $\text{2}^{\text{i+1}}$\;
+                thDireita $\gets$ thEsquerda + $\text{2}^\text{i}$\;
                 
-                \ParaCada{$aresta\ (v, u) \in floresta[thDireita]$}
+                \ParaCada{aresta (v, u) $\in$ floresta[thDireita]}
                 {
-                    $\textbf{Union}(thEsquerda,v,u)$\;
+                    \textbf{Union}(thEsquerda, v, u)\;
                 }
             }
-            $nPares \gets \frac{nPares}{2}$\;
+            nPares $\gets \frac{\text{nPares}}{\text{2}}$\;
         }
     }
     \SetKwProg{DFS}{DFS}{}{}
