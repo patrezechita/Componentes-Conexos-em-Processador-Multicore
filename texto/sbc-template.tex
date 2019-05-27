@@ -401,136 +401,25 @@
 	}
 	\subcaptionbox{}[.32\textwidth]
 	{
-		\includegraphics[width=\linewidth]{B.pdf}
+		\includegraphics[width=\linewidth]{b.pdf}
 	}
 	\subcaptionbox{}[.32\textwidth]
 	{
-		\includegraphics[width=\linewidth]{C.pdf}
+		\includegraphics[width=\linewidth]{c.pdf}
 	}
 	\subcaptionbox{}[.32\textwidth]
 	{
-		\includegraphics[width=\linewidth]{D.pdf}
+		\includegraphics[width=\linewidth]{d.pdf}
 	}
 	\subcaptionbox{}[.32\textwidth]
 	{
-		\includegraphics[width=\linewidth]{E.pdf}
+		\includegraphics[width=\linewidth]{e.pdf}
 	}
 	\subcaptionbox{}[.32\textwidth]
 	{
-		\includegraphics[width=\linewidth]{F.pdf}
+		\includegraphics[width=\linewidth]{f.pdf}
 	}
 	\caption{EXEMPLO I}
-	%\caption{Execução da implementação do algoritmo paralelo. (a) Representação gráfica de G=(V, E). (b) A lista de adjacências do grafo G. (c) Estado das estruturas antes de iniciar o DFS paralelo. (d) Estado das estruturas após terminar de executar o DFS em paralelo. (e) Estado das estruturas após fazer a primeira rodada de uniões em paralelo. (f) Estado das estruturas após fazer a segunda rodada de uniões, sendo que a \textit{thread} 0 possui o resultado do algoritmo.}
-\end{figure}
-
-
-\begin{figure}[h]
-\centering
-\subcaptionbox{}[.32\textwidth]
-  {\resizebox{0.3\textwidth}{!}
-		  {			\begin{tikzpicture}
-			[scale=1,auto=left,every node/.style={circle,fill=gray!20}]
-				\node (v0) at (0,4) {0};
-				\node (v6) at (0,0) {6};
-				\node (v3) at (0,2) {3};
-				\node (v2) at (2,4) {2};
-				\node (v1) at (6,4) {1};
-				\node (v4) at (6,2) {4};
-				\node (v5) at (4,2) {5};
-				\node (v7) at (6,0) {7};
-				\node (v8) at (2,0) {8};
-				\node (v9) at (4,0) {9};
-				\foreach \from/\to in {v0/v3,v3/v6,v3/v2,v0/v2,v1/v4,v4/v5,v4/v7,v8/v9}
-				\draw[line width=1.5pt] (\from) -- (\to);
-			\end{tikzpicture}}}
-\subcaptionbox{}[.32\textwidth]
-  {\resizebox{0.2122\textwidth}{!}
-		  {\begin{tabular}{llcllllllll}
- &  & \multicolumn{1}{l}{} &  &  &  &  &  &  &  &  \\
- &  & \multicolumn{8}{l}{lista de adjacências} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{0} & \multicolumn{7}{l}{$\to2\to3$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{1} & \multicolumn{7}{l}{$\to4$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{2} & \multicolumn{7}{l}{$\to0\to3$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{3} & \multicolumn{7}{l}{$\to6\to2\to0$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{4} & \multicolumn{7}{l}{$\to7\to1\to5$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{5} & \multicolumn{7}{l}{$\to4$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{6} & \multicolumn{7}{l}{$\to3$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{7} & \multicolumn{7}{l}{$\to4$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{8} & \multicolumn{7}{l}{$\to9$} &  \\ \cline{3-3}
- & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{9} & \multicolumn{7}{l}{$\to8$} &  \\ \cline{3-3}
-\end{tabular}}}
-\subcaptionbox{}[.32\textwidth]
-  {		  \resizebox{0.3\textwidth}{!}
-		  {
-				\begin{tabular}{ccccccccccc}
-				\multicolumn{4}{l}{vInicial} & \multicolumn{4}{l}{vFinal} & \multicolumn{3}{l}{floresta} \\ \cline{2-2} \cline{6-6} \cline{10-11} 
-				\multicolumn{1}{c|}{$t_0$} & \multicolumn{1}{c|}{0} &  &  & \multicolumn{1}{c|}{$t_0$} & \multicolumn{1}{c|}{2} &  &  & \multicolumn{1}{c|}{$t_0$} & \multicolumn{2}{c|}{$\{\emptyset\}$} \\ \cline{2-2} \cline{6-6} \cline{10-11} 
-				\multicolumn{1}{c|}{$t_1$} & \multicolumn{1}{c|}{3} &  &  & \multicolumn{1}{c|}{$t_1$} & \multicolumn{1}{c|}{5} &  &  & \multicolumn{1}{c|}{$t_1$} & \multicolumn{2}{c|}{$\{\emptyset\}$} \\ \cline{2-2} \cline{6-6} \cline{10-11} 
-				\multicolumn{1}{c|}{$t_2$} & \multicolumn{1}{c|}{6} &  &  & \multicolumn{1}{c|}{$t_2$} & \multicolumn{1}{c|}{7} &  &  & \multicolumn{1}{c|}{$t_2$} & \multicolumn{2}{c|}{$\{\emptyset\}$} \\ \cline{2-2} \cline{6-6} \cline{10-11} 
-				\multicolumn{1}{c|}{$t_3$} & \multicolumn{1}{c|}{8} &  &  & \multicolumn{1}{c|}{$t_3$} & \multicolumn{1}{c|}{9} &  &  & \multicolumn{1}{c|}{$t_3$} & \multicolumn{2}{c|}{$\{\emptyset\}$} \\ \cline{2-2} \cline{6-6} \cline{10-11} 
-				&  &  &  &  &  &  &  &  &  &  \\
-				\multicolumn{11}{l}{componente} \\
-				& $ _0$ & $ _1$ & $ _2$ & $ _3$ & $ _4$ & $ _5$ & $ _6$ & $ _7$ & $ _8$ & $ _9$ \\ \cline{2-11} 
-				\multicolumn{1}{c|}{$t_0$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-				\multicolumn{1}{c|}{$t_1$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-				\multicolumn{1}{c|}{$t_2$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-				\multicolumn{1}{c|}{$t_3$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-				\end{tabular}
-		  }}
-\subcaptionbox{}[.32\textwidth]
-  {		  \resizebox{0.3\textwidth}{!}
-		  {
-		  		\begin{tabular}{ccccclccccc}
- &  &  &  & \multicolumn{7}{l}{floresta} \\ \cline{6-11} 
- &  &  &  & \multicolumn{1}{c|}{$t_0$} & \multicolumn{6}{l|}{\{(0,2),(2,3),(1,4)\}} \\ \cline{6-11} 
- &  &  &  & \multicolumn{1}{c|}{\multirow{2}{*}{$t_1$}} & \multicolumn{6}{l|}{\multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}\{(3,6),(3,2),(3,0),\\ (4,7),(4,1),(4,5)\}\end{tabular}}} \\
- &  &  &  & \multicolumn{1}{c|}{} & \multicolumn{6}{l|}{} \\ \cline{6-11} 
- &  &  &  & \multicolumn{1}{c|}{$t_2$} & \multicolumn{6}{l|}{\{(6,3),(7,4)\}} \\ \cline{6-11} 
- &  &  &  & \multicolumn{1}{c|}{$t_3$} & \multicolumn{6}{l|}{\{(8,9)\}} \\ \cline{6-11} 
-\multicolumn{11}{l}{componente} \\
- & $ _0$ & $ _1$ & $ _2$ & $ _3$ & \multicolumn{1}{c}{$ _4$} & $ _5$ & $ _6$ & $ _7$ & $ _8$ & $ _9$ \\ \cline{2-11} 
-\multicolumn{1}{c|}{$t_0$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-\multicolumn{1}{c|}{$t_1$} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-\multicolumn{1}{c|}{$t_2$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-\multicolumn{1}{c|}{$t_3$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{3} & \multicolumn{1}{c|}{4} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-\end{tabular}
-		  }}
-\subcaptionbox{}[.32\textwidth]
-  {\resizebox{0.3\textwidth}{!}
-		  {\begin{tabular}{cccccllllll}
-\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  \\
-\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  \\
-\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  \\
-\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  \\
- &  &  &  & \multicolumn{7}{l}{floresta} \\ \cline{6-11} 
- &  &  &  & \multicolumn{1}{c|}{\multirow{2}{*}{$t_0$}} & \multicolumn{6}{l|}{\multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}\{(0,2),(2,3),(1,4),\\ (3,6),(4,7),(4,5)\}\end{tabular}}} \\
- &  &  &  & \multicolumn{1}{c|}{} & \multicolumn{6}{l|}{} \\ \cline{6-11} 
- &  &  &  & \multicolumn{1}{c|}{$t_2$} & \multicolumn{6}{l|}{\{(6,3),(7,4),(8,9)\}} \\ \cline{6-11} 
-\multicolumn{11}{l}{componente} \\
- & $ _0$ & $ _1$ & $ _2$ & $ _3$ & \multicolumn{1}{c}{$ _4$} & \multicolumn{1}{c}{$ _5$} & \multicolumn{1}{c}{$ _6$} & \multicolumn{1}{c}{$ _7$} & \multicolumn{1}{c}{$ _8$} & \multicolumn{1}{c}{$ _9$} \\ \cline{2-11} 
-\multicolumn{1}{c|}{$t_0$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{9} \\ \cline{2-11} 
-\multicolumn{1}{c|}{$t_2$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{2} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{5} & \multicolumn{1}{c|}{6} & \multicolumn{1}{c|}{7} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{8} \\ \cline{2-11} 
-\end{tabular}}}
-  \subcaptionbox{}[.32\textwidth]
-  {\resizebox{0.3\textwidth}{!}
-  {
-  			\begin{tabular}{lccclllllll}
- & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  &  \\
- & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  &  \\
- & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  &  \\
- & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  &  \\
- & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} &  &  &  &  &  &  &  \\
-\multicolumn{1}{c}{} &  &  &  & \multicolumn{7}{l}{floresta} \\ \cline{6-11} 
-\multicolumn{1}{c}{} &  &  &  & \multicolumn{1}{c|}{\multirow{3}{*}{$t_0$}} & \multicolumn{6}{l|}{\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\{(0,2),(2,3),(1,4),\\ (3,6),(4,7),(4,5),\\ (8,9)\}\end{tabular}}} \\
-\multicolumn{1}{c}{} &  &  &  & \multicolumn{1}{c|}{} & \multicolumn{6}{l|}{} \\
-\multicolumn{1}{c}{} &  &  &  & \multicolumn{1}{c|}{} & \multicolumn{6}{l|}{} \\ \cline{6-11} 
-\multicolumn{11}{l}{componente} \\
-\multicolumn{1}{c}{} & $ _0$ & $ _1$ & $ _2$ & \multicolumn{1}{c}{$ _3$} & \multicolumn{1}{c}{$ _4$} & \multicolumn{1}{c}{$ _5$} & \multicolumn{1}{c}{$ _6$} & \multicolumn{1}{c}{$ _7$} & \multicolumn{1}{c}{$ _8$} & \multicolumn{1}{c}{$ _9$} \\ \cline{2-11} 
-\multicolumn{1}{c|}{$t_0$} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{8} & \multicolumn{1}{c|}{8} \\ \cline{2-11} 
-\end{tabular}
-  }
-  }
-  \caption{EXEMPLO II}
 	%\caption{Execução da implementação do algoritmo paralelo. (a) Representação gráfica de G=(V, E). (b) A lista de adjacências do grafo G. (c) Estado das estruturas antes de iniciar o DFS paralelo. (d) Estado das estruturas após terminar de executar o DFS em paralelo. (e) Estado das estruturas após fazer a primeira rodada de uniões em paralelo. (f) Estado das estruturas após fazer a segunda rodada de uniões, sendo que a \textit{thread} 0 possui o resultado do algoritmo.}
 \end{figure}
 
