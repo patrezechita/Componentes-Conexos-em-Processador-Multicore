@@ -269,7 +269,7 @@
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{densid 100\% 8 th}
+        \caption{tempo densid 100\% 8 th}
     \end{minipage}\hfill%
     \begin{minipage}{.48\textwidth}
         \centering
@@ -293,11 +293,67 @@
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{grafo 25K 8th}
+        \caption{tempo grafo 25K 8th}
     \end{minipage}
 \end{figure}
 
-
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			\begin{axis}[
+				%title={Execução alg par 25k com várias threads},
+				legend style={at={(0.5,1.15)},anchor=north,legend columns=-1},
+				xlabel={quantidade de vértices},
+				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
+				%symbolic x coords={a,b,c,d},
+				ylabel={\emph{speedup}},
+				xtick=data,
+				symbolic x coords={5K, 10K, 15K, 25K}]
+				\addplot coordinates {
+					(5K,1.96)(10K,2.10)(15K,2.19)(25K,2.42)};
+				\addplot coordinates {
+					(5K,2.26)(10K,2.50)(15K,2.43)(25K,2.55)};
+				\addplot coordinates {
+					(5K,2.37)(10K,2.51)(15K,2.54)(25K,2.71)};
+				\addplot coordinates {
+					(5K,2.54)(10K,2.60)(15K,2.74)(25K,2.85)};
+				\addplot coordinates {
+					(5K,2.59)(10K,2.82)(15K,2.98)(25K,3.03)};
+			\legend{5\%, 25\%, 50\%, 75\%, 100\%}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{speedup dens 8 th}
+    \end{minipage}\hfill%
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			\begin{axis}[
+				%title={Execução alg par 25k com várias threads},
+				legend pos=north west,
+				xlabel={densidade do grafo},
+				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
+				%symbolic x coords={a,b,c,d},
+				ylabel={\emph{speedup}},
+				xtick=data,
+				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
+				\addplot coordinates {
+					(5\%,4.0333)(25\%,24.6417)(50\%,53.7326)(75\%,82.9658)(100\%,112.2789)};
+				\addplot coordinates {
+					(5\%,1.6681)(25\%,9.6514)(50\%,19.8564)(75\%,29.1588)(100\%,37.0791)};
+			\legend{Sequencial, Paralelo}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{speedup qtd ver 8th}
+    \end{minipage}
+\end{figure}
 
 {\color{gray}\lipsum[1]}
 
