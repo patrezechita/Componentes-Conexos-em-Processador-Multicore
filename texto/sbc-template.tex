@@ -245,6 +245,60 @@
 
 \section{Resultados e Análise}
 
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			\begin{axis}[
+				%title={Execução alg par 25k com várias threads},
+				legend pos=north west,
+				xlabel={quantidade de vértices},
+				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
+				%symbolic x coords={a,b,c,d},
+				ylabel={tempo de execução (s)},
+				xtick=data,
+				symbolic x coords={5K, 10K, 15K, 25K}]
+				\addplot coordinates {
+					(5K,2.9988)(10K,13.7175)(15K,37.0794)(25K,112.2789)};
+				\addplot coordinates {
+					(5K,1.1584)(10K,4.8591)(15K,12.4221)(25K,37.0791)};
+			\legend{Sequencial, Paralelo}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{densid 100\% 8 th}
+    \end{minipage}\hfill%
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			\begin{axis}[
+				%title={Execução alg par 25k com várias threads},
+				legend pos=north west,
+				xlabel={densidade do grafo},
+				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
+				%symbolic x coords={a,b,c,d},
+				ylabel={tempo de execução (s)},
+				xtick=data,
+				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
+				\addplot coordinates {
+					(5\%,4.0333)(25\%,24.6417)(50\%,53.7326)(75\%,82.9658)(100\%,112.2789)};
+				\addplot coordinates {
+					(5\%,1.6681)(25\%,9.6514)(50\%,19.8564)(75\%,29.1588)(100\%,37.0791)};
+			\legend{Sequencial, Paralelo}
+			\end{axis}
+			\end{tikzpicture}
+		}
+        \caption{grafo 25K 8th}
+    \end{minipage}
+\end{figure}
+
+
+
 {\color{gray}\lipsum[1]}
 
 \begin{figure}[h]
