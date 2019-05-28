@@ -335,8 +335,8 @@
         {
 			\begin{tikzpicture}
 			\begin{axis}[
-				%title={Execução alg par 25k com várias threads},
-				legend pos=north west,
+				%legend pos=north west,
+				legend style={at={(0.5,1.15)},anchor=north,legend columns=-1},
 				xlabel={densidade do grafo},
 				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
 				%symbolic x coords={a,b,c,d},
@@ -344,10 +344,14 @@
 				xtick=data,
 				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
 				\addplot coordinates {
-					(5\%,4.0333)(25\%,24.6417)(50\%,53.7326)(75\%,82.9658)(100\%,112.2789)};
+					(5\%,1.96)(25\%,2.26)(50\%,2.37)(75\%,2.54)(100\%,2.59)};
 				\addplot coordinates {
-					(5\%,1.6681)(25\%,9.6514)(50\%,19.8564)(75\%,29.1588)(100\%,37.0791)};
-			\legend{Sequencial, Paralelo}
+					(5\%,2.10)(25\%,2.50)(50\%,2.51)(75\%,2.60)(100\%,2.82)};
+				\addplot coordinates {
+					(5\%,2.19)(25\%,2.43)(50\%,2.54)(75\%,2.74)(100\%,2.98)};
+				\addplot coordinates {
+					(5\%,2.42)(25\%,2.55)(50\%,2.71)(75\%,2.85)(100\%,3.03)};
+			\legend{5K, 10K, 15K, 25K}
 			\end{axis}
 			\end{tikzpicture}
 		}
