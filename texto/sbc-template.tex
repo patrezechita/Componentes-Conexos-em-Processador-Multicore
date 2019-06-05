@@ -103,22 +103,31 @@
 
 \begin{algorithm}[h]
     \DontPrintSemicolon
+    \SetArgSty{textnormal}
+    \newcommand\mycommfont[1]{\small\ttfamily{#1}}
+	\SetCommentSty{mycommfont}
     \caption{Algoritmo paralelo para componentes conexos}
+    \SetKwFor{ForPar}{para cada}{fa\c{c}a em paralelo}{fim para cada}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
     \ComponentesConexosPar{{\normalfont(grafo G = (V, E))}}
     {
-        $p \gets$ número de processadores\;
-        Divide vértices de $V$ em $p$ partes de $\sim|V|/p$ vértices\;
-        \ParaCada{processador $p_i$ em paralelo}
+        p $\gets$ número de processadores\;
+        %Divide vértices de $V$ em $p$ partes de $\sim|V|/p$ vértices\;
+        dividir a matriz de adjacência de G em p partes\;
+        atribuir cada parte da divisão a um dos p processadores\;
+        %\tcp{Executar DFS em paralelo, gerando p florestas}
+        \ForPar{processador $\text{p}_\text{i}$}
         {
-            $V_i \gets$ vértices de $V$ alocados a $p_i$\;
-            $G_i \gets$ subgrafo de $G$ induzido por $V_i$\;
-            Realiza DFS($G_i$) produzindo floresta $F_i$\;
+            $\text{E}_\text{i} \gets$ arestas da parte da matriz de adjacência atribuída a $\text{p}_\text{i}$\;
+            %$\text{G}_\text{i} \gets$ subgrafo de G induzido por $\text{E}_\text{i}$\;
+            subgrafo $\text{G}_\text{i}$ = (V, $\text{E}_\text{i}$)\;
+            executar \textbf{DFS}($\text{G}_\text{i}$) produzindo floresta $\text{F}_\text{i}$\;
         }
 
-        Une florestas $F_i$, par a par, em paralelo, produzindo floresta $F$\;
+        unir florestas $\text{F}_\text{i}$, par a par, até restar uma única floresta F\;
         
-        \tcp{Para cada árvore $A$ $\in$ $F$, vértices de $A$ estão no mesmo componente}
+        %\tcp{Para cada árvore $A$ $\in$ $F$, vértices de $A$ estão no mesmo componente}
+        %\tcp{todos os vértices de uma mesma árvore de F pertencem ao mesmo componente}
     }
 \end{algorithm}
 
