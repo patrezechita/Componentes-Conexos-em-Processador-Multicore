@@ -33,38 +33,34 @@
 
 \maketitle
 
-\begin{abstract}
-  This meta-paper describes the style to be used in articles and short papers
-  for SBC conferences. For papers in English, you should add just an abstract
-  while for the papers in Portuguese, we also ask for an abstract in
-  Portuguese (``resumo''). In both cases, abstracts should not have more than
-  10 lines and must be in the first page of the paper.
-\end{abstract}
+%\begin{abstract}
+%  This meta-paper describes the style to be used in articles and short papers
+%  for SBC conferences. For papers in English, you should add just an abstract
+%  while for the papers in Portuguese, we also ask for an abstract in
+%  Portuguese (``resumo''). In both cases, abstracts should not have more than
+%  10 lines and must be in the first page of the paper.
+%\end{abstract}
      
 \begin{resumo} 
-  Este meta-artigo descreve o estilo a ser usado na confecção de artigos e
-  resumos de artigos para publicação nos anais das conferências organizadas
-  pela SBC. É solicitada a escrita de resumo e abstract apenas para os artigos
-  escritos em português. Artigos em inglês deverão apresentar apenas abstract.
-  Nos dois casos, o autor deve tomar cuidado para que o resumo (e o abstract)
-  não ultrapassem 10 linhas cada, sendo que ambos devem estar na primeira
-  página do artigo.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut bibendum consectetur facilisis. Duis ut elit sed elit commodo pellentesque. Aenean pellentesque diam et lectus congue, porta ultricies enim varius. Praesent turpis velit, aliquam non venenatis ut, posuere egestas tellus. Etiam vel risus et ante pulvinar vulputate. Ut nec enim eu quam scelerisque tincidunt.
 \end{resumo}
 
 \section{Introdução}
 {\color{gray}\lipsum[1]}
 
 \section{Algoritmo Sequencial e Paralelo para Componentes Conexos}
-{\color{gray}\lipsum[1]}
+
+Inicialmente, uma maneira natural de se resolver o problema dos componentes conexos é executando uma busca em profundidade em um determinado grafo. O resultado disso é uma floresta composta por várias árvores, que são por definição conexas (existe pelo menos um caminho entre dois vértices quaisquer da árvore) e acíclicas. Portanto, um algoritmo de busca em profundidade levemente modificado pode resolver sequencialmente o problema dos componentes conexos. Essa afirmação é corroborada por Grama e Sedgewick (citar). O autor do livro Introduction to Parallel Computing apresenta duas maneiras de se resolver o problema, utilizando busca em profundidade (sequencial) e esboça uma ideia de como seria um algoritmo paralelo, dividindo a busca em profundidade entre os processadores e depois unindo os conjuntos gerados.
 
 \subsection{Algoritmo Sequencial Baseado em Busca em Profundidade}
 
-{\color{gray}\lipsum[1]}
+Como resultado de uma busca em profundidade, todo vértice que pertence a uma mesma árvore da solução da busca, está em um mesmo componente do grafo. Facilmente nota-se essa afirmação pois partindo de um vértice, será acessado outro que compartilha uma aresta, logo existe um caminho entre esses dois vértices. A modificação necessária no algoritmo de busca em profundidade é que, toda vez que um vértice é visto pela busca, todos os próximos vértices (acessados a partir deste) estarão no mesmo componente do grafo. O algoritmo \ref{alg_seq} ilustra o funcionamento sequencial implementado (conhecido na literatura) da busca em profundidade com a modificação para se armazenar a informação de qual componente pertence cada vértice.
 
-\begin{algorithm}[h]
+\begin{algorithm}[htp!]
     \DontPrintSemicolon
     \SetArgSty{textnormal}
     \caption{Algoritmo sequencial para componentes conexos}
+    \label{alg_seq}
     \SetKwProg{ComponentesConexos}{ComponentesConexos}{}{}
     \ComponentesConexos{{\normalfont(grafo G = (V, E))}}
 	{
@@ -99,14 +95,15 @@
 
 \subsection{Algoritmo Paralelo Baseado em Busca em Profundidade e nas Operações Union/Find}
 
-{\color{gray}\lipsum[1]}
+O autor Grama demonstra uma ideia de como paralelizar esse processo sequencial da busca em profundidade. Sua sugestão, mesmo sendo bem alto nível, é suficiente para entender o funcionamento do algoritmo paralelo. Primeiramente, deve-se dividir a matriz de adjacências de um grafo para todos os processadores, assim sendo, cada processador vai ter um "pedaço" do grafo no qual irá realizar uma busca em profundidade, após esse procedimento, todos conjuntos gerados pela busca serão unidos par a par, até sobrar somente um conjunto. veja que, o resultado será semelhante ao de executar a busca em profundidade de maneira sequencial. O algoritmo 2 ilustra o passo a passo de como seria esse algoritmo paralelo do grama.
 
-\begin{algorithm}[h]
+\begin{algorithm}[htp!]
     \DontPrintSemicolon
     \SetArgSty{textnormal}
     \newcommand\mycommfont[1]{\small\ttfamily{#1}}
 	\SetCommentSty{mycommfont}
     \caption{Algoritmo paralelo para componentes conexos}
+    \label{alg_grama}
     \SetKwFor{ForPar}{para cada}{fa\c{c}a em paralelo}{fim para cada}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
     \ComponentesConexosPar{{\normalfont(grafo G = (V, E))}}
@@ -133,15 +130,64 @@
 
 \section{Solução Paralela para Componentes Conexos para Processador Multicore}
 
-{\color{gray}\lipsum[1]}
+Tendo em mãos a sugestão do algoritmo paralelo do autor grama, implementamos uma versão nossa do algoritmo dado as especificidades da linguagem e da experiencia do autor deste trabalho. Primeiramente, utilizamos listas de adjacências para representar os grafos e não matriz de adjacência como sugere o autor. A linguagem utilizada é C e para paralelizar o código, foi utilizado o OpenMP. Como entrada, o algoritmo implementado recebe um arquivo contendo todas as arestas do grafo de entrada, ao ler esse conjunto de arestas, o algoritmo monta a lista de adjacências que será utilizada pela busca em profundidade. Com a lista de adjacências pronta, é feito um cálculo para dividir o mais igual possível a quantidade de vértices para cada processador, na intenção de dividir igualmente a carga de trabalho. Sendo assim, cada processador irá possuir um subgrafo que será gerado pelos vértices da lista de adjacência designados ao processador. É executado a busca em profundidade, cada processador, ao ver um vértice irá marcar esse vértice em um componente e todos os outros vértices que podem ser vistos a partir deste, estarão no mesmo componente. É utilizado uma estrutura de dados chamada componente, onde cada processador possui o índice do componente ao qual pertence. Também durante a busca em profundidade, é necessário que seja armazenado a aresta da qual o processador "viu". Utilizamos a estrutura floresta para que seja guardado os pares de arestas vistos durante a busca. O resultado da busca em profundidade que cada processador executa paralelamente é a floresta e o índice do componente de cada vértice, mas veja que, um processador guarda um índice de um componente de um vértice que ele não viu (por padrão, o índice do próprio vértice), iremos resolver essa inconsistência no próximo passo.
+Feita a busca em profundidade, é hora de unir todos os dados dos processadores. Como essa união é feita entre dois processadores (par a par), utilizamos a definição de processador da esquerda e processador da direita para se referir ao par de processadores. A união das florestas é simples e ocorre da seguinte maneira: para cada aresta do processador da direita, o processador da direita faz um find nos componentes destes dois vértices que compõem a aresta. Caso o find resulte em componentes diferentes, significa que para o processador da direita estes dois vértices estão em um mesmo componente no grafo (pois ele viu isso na busca em profundidade) mas o processador da esquerda não viu esses dois vértices na sua busca em profundidade e então ele deve atualizar o índice dos dois vértices e na sua estrutura floresta, adicionar a aresta, sendo esse processo o union. Caso o processador da esquerda, ao fazer o find, retorne que os dois vértices estão no mesmo componente, então simplesmente ignora a aresta do processador da direita. Esse procedimento é repetido para todas as arestas que o processador da direita possui em sua estrutura floresta. Após concluído esse procedimento, teremos em todos os processadores da esquerda, os valores atualizados e nos da direita, os valores que não serão mais uteis, portanto, metade dos processadores não serão mais utilizados para o próximo passo, que é executar novamente a união dos conjuntos com os processadores que ainda restaram, par a par. Ao final desse processo, teremos apenas dois processadores e o processador da esquerda deste ultimo procedimento terá a informação completa sobre os componentes conexos do grafo de entrada. A figura 1 ilustra a execução deste algoritmo, o qual é representado pelo algoritmo 3 e 4.
 
-\begin{algorithm}[h]
+\begin{figure}[htp!]
+	\centering
+	\subcaptionbox{}[.32\textwidth]
+	{
+		\resizebox{0.3\textwidth}{!}
+        {
+			\begin{tikzpicture}
+			[scale=1,auto=left,every node/.style={circle,fill=gray!20}]
+				\node (v0) at (0,4) {0};
+				\node (v6) at (0,0) {6};
+				\node (v3) at (0,2) {3};
+				\node (v2) at (2,4) {2};
+				\node (v1) at (6,4) {1};
+				\node (v4) at (6,2) {4};
+				\node (v5) at (4,2) {5};
+				\node (v7) at (6,0) {7};
+				\node (v8) at (2,0) {8};
+				\node (v9) at (4,0) {9};
+				\node [fill=white!0](x) at (0,-1) {}; %vértice invisível para alinhar 
+				\foreach \from/\to in {v0/v3,v3/v6,v3/v2,v0/v2,v1/v4,v4/v5,v4/v7,v8/v9}
+				\draw[line width=1.5pt] (\from) -- (\to);
+			\end{tikzpicture}
+		}
+	}
+	\subcaptionbox{}[.32\textwidth]
+	{
+		\includegraphics[width=\linewidth]{figB.pdf}
+	}
+	\subcaptionbox{}[.32\textwidth]
+	{
+		\includegraphics[width=\linewidth]{figC.pdf}
+	}
+	\subcaptionbox{}[.32\textwidth]
+	{
+		\includegraphics[width=\linewidth]{figD.pdf}
+	}
+	\subcaptionbox{}[.32\textwidth]
+	{
+		\includegraphics[width=\linewidth]{figE.pdf}
+	}
+	\subcaptionbox{}[.32\textwidth]
+	{
+		\includegraphics[width=\linewidth]{figF.pdf}
+	}
+	\caption{Execução da implementação do algoritmo paralelo. (a) Representação gráfica de G=(V, E). (b) A lista de adjacências do grafo G. (c) Estado das estruturas antes de iniciar o DFS paralelo. (d) Estado das estruturas após terminar de executar o DFS em paralelo. (e) Estado das estruturas após fazer a primeira rodada de uniões em paralelo. (f) Estado das estruturas após fazer a segunda rodada de uniões, sendo que a \emph{thread} 0 possui o resultado do algoritmo.}
+\end{figure}
+
+\begin{algorithm}[htp!]
     \DontPrintSemicolon
     \SetArgSty{textnormal}
     \newcommand\mycommfont[1]{\small\ttfamily{#1}}
 	\SetCommentSty{mycommfont}
     %\SetAlCapNameFnt{\small} %tamanho nome do algoritmo
     \caption{Implementação do algoritmo paralelo para componentes conexos}
+    \label{alg_par1}
     \SetKwProg{ComponentesConexosPar}{ComponentesConexosParalelo}{}{}
     \SetKwFor{ForPar}{para}{fa\c{c}a em paralelo}{fim para cada}
     \ComponentesConexosPar{{\normalfont(grafo G = (V, E))}}
@@ -225,6 +271,7 @@
     \DontPrintSemicolon
     \SetArgSty{textnormal}
     \caption{Operações Union e Find}
+    \label{alg_par2}
     \SetKw{Return}{retorna}
     \SetKwProg{UNION}{Union}{}{}
     \UNION{{\normalfont(thread t, vértice v, vértice u)}}
@@ -254,7 +301,10 @@
 
 \section{Resultados e Análise}
 
-\begin{figure}[h]
+Para mensurar o desempenho dos dois algoritmos implementados, utilizamos um grafo de entrada aleatório com vários tamanhos, sendo eles 5.000, 10.000, 15.000 e 25.000 vértices. Apesar de o tamanho ser aparentemente pequeno, a busca em profundidade analisa todas as arestas do grafo e não somente os vértices, logo, para um grafo k-completo de 25.000 vértices teremos 312.487.500 arestas. Como os grafos são aleatórios, dividimos os mesmos em densidades (quantidade de arestas do grafo em relação a quantidade máxima de arestas possíveis), sendo elas 10\%, 25\%, 50\%, 75\% e 100\%. Um grafo de 5.000 vértices e densidade de 25\% tem 3.124.375 arestas já que, caso fosse definido uma densidade de 100\%, este mesmo grafo possuiria 12.497.500 arestas.
+A execução do algoritmo se deu em uma máquina DELL PRECISION (especificações) alocada na FACOM. Os gráficos abaixo ilustram os testes de desempenho.
+
+\begin{figure}[htp!]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -306,7 +356,9 @@
     \end{minipage}
 \end{figure}
 
-\begin{figure}[h]
+Na figura 2 é analisado o tempo de execução dos dois algoritmos (sequencial e paralelo) em relação ao tamanho de vértices da entrada (sendo o grafo de entrada k-completo, ou seja, com densidade de 100\%). Já na figura 3, temos um grafo de entrada de tamanho fixo (25.000 vértices) variando sua densidade.
+
+\begin{figure}[htp!]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -369,6 +421,8 @@
     \end{minipage}
 \end{figure}
 
+A figura 4 e 5 temos os speedups do algoritmo paralelo em relação ao sequencial. Nota-se aqui mais facilmente como há também um ganho de performance em relação ao grafo de menor tamanho (visto que é mais difícil enxergar essa diferença na figura 2 e 3).
+
 \begin{figure}[h]
     \centering
     \begin{minipage}{.48\textwidth}
@@ -376,23 +430,24 @@
         \resizebox{\textwidth}{!}
         {
 			\begin{tikzpicture}
-				\begin{axis}
-				[
-					legend pos=north west,
-					%x tick label style={/pgf/number format/1000 sep=},
-					ylabel={tempo de execução (s)},
-					xlabel={densidade do grafo},
-					enlargelimits=0.15,
-					ybar,
-					nodes near coords,
-					nodes near coords align={vertical},
-					bar width=17.5pt,
-					symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%},
-					]
-				]
-			\addplot 
-				coordinates {(5\%,1.6681)(25\%,9.6514)(50\%,19.8)(75\%,29.1)(100\%,37.1)};
-			\legend{25K}
+			\begin{axis}[
+				legend pos=north west,
+				xlabel={densidade do grafo},
+				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
+				%symbolic x coords={a,b,c,d},
+				ylabel={tempo de execução (s)},
+				%xtick=data,
+				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
+				\addplot coordinates {
+					(5\%,2.9733)(25\%,17.3807)(50\%,36.9300)(75\%,56.7824)(100\%,71.7106)
+				};
+				\addplot coordinates {
+					(5\%,2.0330)(25\%,12.3225)(50\%,26.4038)(75\%,40.3008)(100\%,48.8452)
+				};
+				\addplot coordinates {
+					(5\%,1.6745)(25\%,9.7046)(50\%,19.8150)(75\%,29.0185)(100\%,37.0678)
+				};
+			\legend{2 $th$,4 $th$,8 $th$}
 			\end{axis}
 			\end{tikzpicture}
 		}
@@ -428,7 +483,7 @@
     \end{minipage}
 \end{figure}
 
-{\color{gray}\lipsum[1]}
+A fim de medir diferentes desempenhos em relação a quantidade de threads, a figura 6 e 7 ilustram o tempo de execução do algoritmo utilizando diferentes quantidades de threads. Essa medição é interessante para ilustrar o desempenho do algoritmo em relação ao seu potencial de paralelismo. 
 
 
 
@@ -438,52 +493,7 @@
 
 {\color{gray}\lipsum[1]}
 
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{}[.32\textwidth]
-	{
-		\resizebox{0.3\textwidth}{!}
-        {
-			\begin{tikzpicture}
-			[scale=1,auto=left,every node/.style={circle,fill=gray!20}]
-				\node (v0) at (0,4) {0};
-				\node (v6) at (0,0) {6};
-				\node (v3) at (0,2) {3};
-				\node (v2) at (2,4) {2};
-				\node (v1) at (6,4) {1};
-				\node (v4) at (6,2) {4};
-				\node (v5) at (4,2) {5};
-				\node (v7) at (6,0) {7};
-				\node (v8) at (2,0) {8};
-				\node (v9) at (4,0) {9};
-				\node [fill=white!0](x) at (0,-1) {}; %vértice invisível para alinhar 
-				\foreach \from/\to in {v0/v3,v3/v6,v3/v2,v0/v2,v1/v4,v4/v5,v4/v7,v8/v9}
-				\draw[line width=1.5pt] (\from) -- (\to);
-			\end{tikzpicture}
-		}
-	}
-	\subcaptionbox{}[.32\textwidth]
-	{
-		\includegraphics[width=\linewidth]{figB.pdf}
-	}
-	\subcaptionbox{}[.32\textwidth]
-	{
-		\includegraphics[width=\linewidth]{figC.pdf}
-	}
-	\subcaptionbox{}[.32\textwidth]
-	{
-		\includegraphics[width=\linewidth]{figD.pdf}
-	}
-	\subcaptionbox{}[.32\textwidth]
-	{
-		\includegraphics[width=\linewidth]{figE.pdf}
-	}
-	\subcaptionbox{}[.32\textwidth]
-	{
-		\includegraphics[width=\linewidth]{figF.pdf}
-	}
-	\caption{Execução da implementação do algoritmo paralelo. (a) Representação gráfica de G=(V, E). (b) A lista de adjacências do grafo G. (c) Estado das estruturas antes de iniciar o DFS paralelo. (d) Estado das estruturas após terminar de executar o DFS em paralelo. (e) Estado das estruturas após fazer a primeira rodada de uniões em paralelo. (f) Estado das estruturas após fazer a segunda rodada de uniões, sendo que a \emph{thread} 0 possui o resultado do algoritmo.}
-\end{figure}
+
 
 \bibliographystyle{sbc}
 \bibliography{sbc-template}
