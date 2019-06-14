@@ -321,14 +321,14 @@ A execução do algoritmo se deu em uma máquina DELL PRECISION (especificaçõe
 				xtick=data,
 				symbolic x coords={5K, 10K, 15K, 25K}]
 				\addplot coordinates {
-					(5K,2.9988)(10K,13.7175)(15K,37.0794)(25K,112.2789)};
+					(5K,2.8425)(10K,12.9809)(15K,35.0820)(25K,105.7478)};
 				\addplot coordinates {
-					(5K,1.1584)(10K,4.8591)(15K,12.4221)(25K,37.0791)};
+					(5K,0.9850)(10K,4.2318)(15K,10.5094)(25K,30.9745)};
 			\legend{Sequencial, Paralelo}
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{tempo densid 100\% 8 th}
+        \caption{Tempo de execução, densidade fixada em 100\% e paralelo com 16 \emph{threads}}
     \end{minipage}\hfill%
     \begin{minipage}{.48\textwidth}
         \centering
@@ -345,14 +345,14 @@ A execução do algoritmo se deu em uma máquina DELL PRECISION (especificaçõe
 				xtick=data,
 				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
 				\addplot coordinates {
-					(5\%,4.0333)(25\%,24.6417)(50\%,53.7326)(75\%,82.9658)(100\%,112.2789)};
+					(5\%,3.7357)(25\%,22.9317)(50\%,50.8209)(75\%,77.6357)(100\%,105.7478)};
 				\addplot coordinates {
-					(5\%,1.6681)(25\%,9.6514)(50\%,19.8564)(75\%,29.1588)(100\%,37.0791)};
+					(5\%,1.3433)(25\%,8.1235)(50\%,16.6858)(75\%,24.3761)(100\%,30.9745)};
 			\legend{Sequencial, Paralelo}
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{tempo grafo 25K 8th}
+        \caption{Tempo de execução, tamanho fixado em 25K e paralelo com 16 \emph{threads}}
     \end{minipage}
 \end{figure}
 
@@ -375,20 +375,20 @@ Na figura 2 é analisado o tempo de execução dos dois algoritmos (sequencial e
 				xtick=data,
 				symbolic x coords={5K, 10K, 15K, 25K}]
 				\addplot coordinates {
-					(5K,1.96)(10K,2.10)(15K,2.19)(25K,2.42)};
+					(5K,2.0066)(10K,2.5546)(15K,2.5800)(25K,2.7810)};
 				\addplot coordinates {
-					(5K,2.26)(10K,2.50)(15K,2.43)(25K,2.55)};
+					(5K,2.7384)(10K,2.7336)(15K,2.6243)(25K,2.8229)};
 				\addplot coordinates {
-					(5K,2.37)(10K,2.51)(15K,2.54)(25K,2.71)};
+					(5K,2.6475)(10K,2.7354)(15K,2.7931)(25K,3.0458)};
 				\addplot coordinates {
-					(5K,2.54)(10K,2.60)(15K,2.74)(25K,2.85)};
+					(5K,2.7349)(10K,2.8928)(15K,3.0592)(25K,3.1849)};
 				\addplot coordinates {
-					(5K,2.59)(10K,2.82)(15K,2.98)(25K,3.03)};
+					(5K,2.8858)(10K,3.0675)(15K,3.3382)(25K,3.4140)};
 			\legend{5\%, 25\%, 50\%, 75\%, 100\%}
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{speedup dens 8th}
+        \caption{\emph{Speedup} paralelo em relação ao sequencial, paralelo com 16 \emph{threads}}
     \end{minipage}\hfill%
     \begin{minipage}{.48\textwidth}
         \centering
@@ -406,18 +406,18 @@ Na figura 2 é analisado o tempo de execução dos dois algoritmos (sequencial e
 				xtick=data,
 				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
 				\addplot coordinates {
-					(5\%,1.96)(25\%,2.26)(50\%,2.37)(75\%,2.54)(100\%,2.59)};
+					(5\%,2.0066)(25\%,2.7384)(50\%,2.6475)(75\%,2.7349)(100\%,2.8858)};
 				\addplot coordinates {
-					(5\%,2.10)(25\%,2.50)(50\%,2.51)(75\%,2.60)(100\%,2.82)};
+					(5\%,2.5546)(25\%,2.7336)(50\%,2.7354)(75\%,2.8928)(100\%,3.0675)};
 				\addplot coordinates {
-					(5\%,2.19)(25\%,2.43)(50\%,2.54)(75\%,2.74)(100\%,2.98)};
+					(5\%,2.5800)(25\%,2.6243)(50\%,2.7931)(75\%,3.0592)(100\%,3.3382)};
 				\addplot coordinates {
-					(5\%,2.42)(25\%,2.55)(50\%,2.71)(75\%,2.85)(100\%,3.03)};
+					(5\%,2.7810)(25\%,2.8229)(50\%,3.0458)(75\%,3.1849)(100\%,3.4140)};
 			\legend{5K, 10K, 15K, 25K}
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{speedup qtd ver 8th}
+        \caption{\emph{Speedup} paralelo em relação ao sequencial, paralelo com 16 \emph{threads}}
     \end{minipage}
 \end{figure}
 
@@ -432,26 +432,25 @@ A figura 4 e 5 temos os speedups do algoritmo paralelo em relação ao sequencia
 			\begin{tikzpicture}
 			\begin{axis}[
 				legend pos=north west,
-				xlabel={densidade do grafo},
+				xlabel={quantidade de vértices},
 				%legend style={at={(0.5,-0.20)},anchor=north,legend columns=-1},
 				%symbolic x coords={a,b,c,d},
 				ylabel={tempo de execução (s)},
-				%xtick=data,
-				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
+				xtick=data,
+				symbolic x coords={5K, 10K, 15K, 25K}]
 				\addplot coordinates {
-					(5\%,2.9733)(25\%,17.3807)(50\%,36.9300)(75\%,56.7824)(100\%,71.7106)
-				};
+					(5K,2.0038)(10K,8.4621)(15K,21.8479)(25K,64.3706)};
 				\addplot coordinates {
-					(5\%,2.0330)(25\%,12.3225)(50\%,26.4038)(75\%,40.3008)(100\%,48.8452)
-				};
+					(5K,1.2820)(10K,5.8591)(15K,14.8007)(25K,41.4975)};
 				\addplot coordinates {
-					(5\%,1.6745)(25\%,9.7046)(50\%,19.8150)(75\%,29.0185)(100\%,37.0678)
-				};
-			\legend{2 $th$,4 $th$,8 $th$}
+					(5K,1.0018)(10K,4.3181)(15K,10.5758)(25K,31.0767)};
+				\addplot coordinates {
+					(5K,0.9850)(10K,4.2318)(15K,10.5094)(25K,30.9745)};
+			\legend{2 $th$,4 $th$,8 $th$, 16 $th$}
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{tempo grafo 25K 8th}
+        \caption{Tempo de execução, densidade fixada em 100\%}
     \end{minipage}\hfill%
     \begin{minipage}{.48\textwidth}
         \centering
@@ -467,19 +466,22 @@ A figura 4 e 5 temos os speedups do algoritmo paralelo em relação ao sequencia
 				%xtick=data,
 				symbolic x coords={5\%, 25\%, 50\%, 75\%, 100\%}]
 				\addplot coordinates {
-					(5\%,2.9733)(25\%,17.3807)(50\%,36.9300)(75\%,56.7824)(100\%,71.7106)
+					(5\%,2.4396)(25\%,15.6663)(50\%,33.4889)(75\%,51.2299)(100\%,64.3706)
 				};
 				\addplot coordinates {
-					(5\%,2.0330)(25\%,12.3225)(50\%,26.4038)(75\%,40.3008)(100\%,48.8452)
+					(5\%,1.6939)(25\%,11.2393)(50\%,22.2700)(75\%,35.0567)(100\%,41.4975)
 				};
 				\addplot coordinates {
-					(5\%,1.6745)(25\%,9.7046)(50\%,19.8150)(75\%,29.0185)(100\%,37.0678)
+					(5\%,1.3561)(25\%,8.1547)(50\%,16.7268)(75\%,24.5019)(100\%,31.0767)
 				};
-			\legend{2 $th$,4 $th$,8 $th$}
+				\addplot coordinates {
+					(5\%,1.3433)(25\%,8.1235)(50\%,16.6858)(75\%,24.3761)(100\%,30.9745)
+				};
+			\legend{2 $th$,4 $th$,8 $th$, 16 $th$}
 			\end{axis}
 			\end{tikzpicture}
 		}
-        \caption{tempo 25K varias th}
+        \caption{Tempo de execução, tamanho fixado em 25K}
     \end{minipage}
 \end{figure}
 
