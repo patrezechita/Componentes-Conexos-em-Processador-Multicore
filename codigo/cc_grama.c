@@ -50,6 +50,12 @@ int main(int argc, char *argv[])
 	// define a quantidade de threads disponível
 	int nThread = omp_get_max_threads();
 
+	// cso seja informada, fixar a quantidade de threads
+	if(argv[2] != NULL)
+	{
+		nThread = atol(argv[2]);
+	}
+
 	// é necessário que o número de threads seja potência de 2
 	if(ceil(log2(nThread)) != floor(log2(nThread)))
 	{
@@ -226,7 +232,7 @@ int main(int argc, char *argv[])
 
 	// termina de contar o tempo
 	tempo_final = omp_get_wtime() - tempo_inicial;
-	printf("grama\t%s\t%.4lf\n", argv[1], tempo_final);
+	printf("grama %dth \t%s\t%.4lf\n", nThread, argv[1], tempo_final);
 	// printf("gramaSEM\t%s\t%.4lf\n", argv[1], tempo_final_sem_aloc);
 
 	// usa essa funcao pra imprimir a saida e verificar o resultado do algoritmo
