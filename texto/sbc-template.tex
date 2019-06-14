@@ -48,11 +48,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut bibendum consectetur
 \section{Introdução}
 {\color{gray}\lipsum[1]}
 
-\section{Algoritmo Sequencial e Paralelo para Componentes Conexos}
+\section{Algoritmos Sequencial e Paralelo para Componentes Conexos}
 
-Inicialmente, uma maneira natural de se resolver o problema dos componentes conexos é executando uma busca em profundidade em um determinado grafo. O resultado disso é uma floresta composta por várias árvores, que são por definição conexas (existe pelo menos um caminho entre dois vértices quaisquer da árvore) e acíclicas. Portanto, um algoritmo de busca em profundidade levemente modificado pode resolver sequencialmente o problema dos componentes conexos. Essa afirmação é corroborada por Grama e Sedgewick (citar). O autor do livro Introduction to Parallel Computing apresenta duas maneiras de se resolver o problema, utilizando busca em profundidade (sequencial) e esboça uma ideia de como seria um algoritmo paralelo, dividindo a busca em profundidade entre os processadores e depois unindo os conjuntos gerados.
 
 \subsection{Algoritmo Sequencial Baseado em Busca em Profundidade}
+
+Inicialmente, uma maneira natural de se resolver o problema dos componentes conexos é executando uma busca em profundidade em um determinado grafo. O resultado disso é uma floresta composta por várias árvores, que são por definição conexas (existe pelo menos um caminho entre dois vértices quaisquer da árvore) e acíclicas. Portanto, um algoritmo de busca em profundidade levemente modificado pode resolver sequencialmente o problema dos componentes conexos. Essa afirmação é corroborada por Grama e Sedgewick (citar). O autor do livro Introduction to Parallel Computing apresenta duas maneiras de se resolver o problema, utilizando busca em profundidade (sequencial) e esboça uma ideia de como seria um algoritmo paralelo, dividindo a busca em profundidade entre os processadores e depois unindo os conjuntos gerados.
 
 Como resultado de uma busca em profundidade, todo vértice que pertence a uma mesma árvore da solução da busca, está em um mesmo componente do grafo. Facilmente nota-se essa afirmação pois partindo de um vértice, será acessado outro que compartilha uma aresta, logo existe um caminho entre esses dois vértices. A modificação necessária no algoritmo de busca em profundidade é que, toda vez que um vértice é visto pela busca, todos os próximos vértices (acessados a partir deste) estarão no mesmo componente do grafo. O algoritmo \ref{alg_seq} ilustra o funcionamento sequencial implementado (conhecido na literatura) da busca em profundidade com a modificação para se armazenar a informação de qual componente pertence cada vértice.
 
@@ -95,7 +96,7 @@ Como resultado de uma busca em profundidade, todo vértice que pertence a uma me
 
 \subsection{Algoritmo Paralelo Baseado em Busca em Profundidade e nas Operações Union/Find}
 
-O autor Grama demonstra uma ideia de como paralelizar esse processo sequencial da busca em profundidade. Sua sugestão, mesmo sendo bem alto nível, é suficiente para entender o funcionamento do algoritmo paralelo. Primeiramente, deve-se dividir a matriz de adjacências de um grafo para todos os processadores, assim sendo, cada processador vai ter um "pedaço" do grafo no qual irá realizar uma busca em profundidade, após esse procedimento, todos conjuntos gerados pela busca serão unidos par a par, até sobrar somente um conjunto. veja que, o resultado será semelhante ao de executar a busca em profundidade de maneira sequencial. O algoritmo 2 ilustra o passo a passo de como seria esse algoritmo paralelo do grama.
+Em~\cite{Grama:2003} uma ideia de como paralelizar esse processo sequencial da busca em profundidade é apresentada. Sua sugestão, mesmo sendo bem alto nível, é suficiente para entender o funcionamento do algoritmo paralelo. Primeiramente, deve-se dividir a matriz de adjacências do grafo por todos os processadores, assim sendo, cada processador vai receber um ``pedaço'' do grafo no qual irá realizar uma busca em profundidade. Após esse procedimento, todos conjuntos gerados pela busca serão unidos par a par, até sobrar somente um conjunto. O resultado será semelhante ao de executar a busca em profundidade de maneira sequencial. O algoritmo 2 ilustra os passos desse algoritmo paralelo do grama.
 
 \begin{algorithm}[htp!]
     \DontPrintSemicolon
@@ -110,18 +111,18 @@ O autor Grama demonstra uma ideia de como paralelizar esse processo sequencial d
     {
         p $\gets$ número de processadores\;
         %Divide vértices de $V$ em $p$ partes de $\sim|V|/p$ vértices\;
-        dividir a matriz de adjacência de G em p partes\;
-        atribuir cada parte da divisão a um dos p processadores\;
+        divida a matriz de adjacência de G em p faixas\;
+        atribua cada faixa da divisão a um dos p processadores\;
         %\tcp{Executar DFS em paralelo, gerando p florestas}
         \ForPar{processador $\text{p}_\text{i}$}
         {
-            $\text{E}_\text{i} \gets$ arestas da parte da matriz de adjacência atribuída a $\text{p}_\text{i}$\;
+            $\text{E}_\text{i} \gets$ arestas da faixa da matriz de adjacência atribuída a $\text{p}_\text{i}$\;
             %$\text{G}_\text{i} \gets$ subgrafo de G induzido por $\text{E}_\text{i}$\;
-            subgrafo $\text{G}_\text{i}$ = (V, $\text{E}_\text{i}$)\;
-            executar \textbf{DFS}($\text{G}_\text{i}$) produzindo floresta $\text{F}_\text{i}$\;
+            defina subgrafo $\text{G}_\text{i}$ = (V, $\text{E}_\text{i}$)\;
+            execute \textbf{DFS}($\text{G}_\text{i}$) produzindo floresta $\text{F}_\text{i}$\;
         }
 
-        unir florestas $\text{F}_\text{i}$, par a par, até restar uma única floresta F\;
+        una florestas $\text{F}_\text{i}$, par a par, até restar uma única floresta F\;
         
         %\tcp{Para cada árvore $A$ $\in$ $F$, vértices de $A$ estão no mesmo componente}
         %\tcp{todos os vértices de uma mesma árvore de F pertencem ao mesmo componente}
@@ -130,8 +131,15 @@ O autor Grama demonstra uma ideia de como paralelizar esse processo sequencial d
 
 \section{Solução Paralela para Componentes Conexos para Processador Multicore}
 
-Tendo em mãos a sugestão do algoritmo paralelo do autor grama, implementamos uma versão nossa do algoritmo dado as especificidades da linguagem e da experiencia do autor deste trabalho. Primeiramente, utilizamos listas de adjacências para representar os grafos e não matriz de adjacência como sugere o autor. A linguagem utilizada é C e para paralelizar o código, foi utilizado o OpenMP. Como entrada, o algoritmo implementado recebe um arquivo contendo todas as arestas do grafo de entrada, ao ler esse conjunto de arestas, o algoritmo monta a lista de adjacências que será utilizada pela busca em profundidade. Com a lista de adjacências pronta, é feito um cálculo para dividir o mais igual possível a quantidade de vértices para cada processador, na intenção de dividir igualmente a carga de trabalho. Sendo assim, cada processador irá possuir um subgrafo que será gerado pelos vértices da lista de adjacência designados ao processador. É executado a busca em profundidade, cada processador, ao ver um vértice irá marcar esse vértice em um componente e todos os outros vértices que podem ser vistos a partir deste, estarão no mesmo componente. É utilizado uma estrutura de dados chamada componente, onde cada processador possui o índice do componente ao qual pertence. Também durante a busca em profundidade, é necessário que seja armazenado a aresta da qual o processador "viu". Utilizamos a estrutura floresta para que seja guardado os pares de arestas vistos durante a busca. O resultado da busca em profundidade que cada processador executa paralelamente é a floresta e o índice do componente de cada vértice, mas veja que, um processador guarda um índice de um componente de um vértice que ele não viu (por padrão, o índice do próprio vértice), iremos resolver essa inconsistência no próximo passo.
-Feita a busca em profundidade, é hora de unir todos os dados dos processadores. Como essa união é feita entre dois processadores (par a par), utilizamos a definição de processador da esquerda e processador da direita para se referir ao par de processadores. A união das florestas é simples e ocorre da seguinte maneira: para cada aresta do processador da direita, o processador da direita faz um find nos componentes destes dois vértices que compõem a aresta. Caso o find resulte em componentes diferentes, significa que para o processador da direita estes dois vértices estão em um mesmo componente no grafo (pois ele viu isso na busca em profundidade) mas o processador da esquerda não viu esses dois vértices na sua busca em profundidade e então ele deve atualizar o índice dos dois vértices e na sua estrutura floresta, adicionar a aresta, sendo esse processo o union. Caso o processador da esquerda, ao fazer o find, retorne que os dois vértices estão no mesmo componente, então simplesmente ignora a aresta do processador da direita. Esse procedimento é repetido para todas as arestas que o processador da direita possui em sua estrutura floresta. Após concluído esse procedimento, teremos em todos os processadores da esquerda, os valores atualizados e nos da direita, os valores que não serão mais uteis, portanto, metade dos processadores não serão mais utilizados para o próximo passo, que é executar novamente a união dos conjuntos com os processadores que ainda restaram, par a par. Ao final desse processo, teremos apenas dois processadores e o processador da esquerda deste ultimo procedimento terá a informação completa sobre os componentes conexos do grafo de entrada. A figura 1 ilustra a execução deste algoritmo, o qual é representado pelo algoritmo 3 e 4.
+Tendo em mãos a sugestão do algoritmo paralelo~\cite{Grama:2003}, implementamos uma versão nossa do algoritmo dado as especificidades da linguagem e da experiencia do autor deste trabalho. Primeiramente, utilizamos listas de adjacências para representar os grafos e não matriz de adjacência como sugere o autor. A linguagem utilizada é C e para paralelizar o código, foi utilizado o OpenMP~\cite{OpenMP:2018}. Como entrada, o algoritmo implementado recebe um arquivo contendo todas as arestas do grafo de entrada, ao ler esse conjunto de arestas, o algoritmo monta a lista de adjacências que será utilizada pela busca em profundidade.
+ 
+Com a lista de adjacências pronta, é feito um cálculo para dividir o mais igual possível a quantidade de vértices para cada processador, na intenção de dividir igualmente a carga de trabalho. Sendo assim, cada processador irá possuir um subgrafo que será gerado pelos vértices da lista de adjacência designados ao processador.
+ 
+A busca em profundidade é executada, cada processador, ao ver um vértice irá marcar esse vértice em um componente e todos os outros vértices que podem ser vistos a partir deste, estarão no mesmo componente. É utilizado uma estrutura de dados chamada componente, onde cada processador possui o índice do componente ao qual pertence. Também durante a busca em profundidade, é necessário que seja armazenado a aresta da qual o processador ``viu''. Utilizamos a estrutura floresta para que seja guardado os pares de arestas vistos durante a busca. O resultado da busca em profundidade que cada processador executa paralelamente é a floresta e o índice do componente de cada vértice, mas veja que, um processador guarda um índice de um componente de um vértice que ele não viu (por padrão, o índice do próprio vértice), iremos resolver essa inconsistência no próximo passo.
+ 
+Feita a busca em profundidade, é hora de unir todos os dados dos processadores. Como essa união é feita entre dois processadores (par a par), utilizamos a definição de processador da esquerda e processador da direita para se referir ao par de processadores. A união das florestas é simples e ocorre da seguinte maneira: para cada aresta do processador da direita, o processador da direita faz um find nos componentes destes dois vértices que compõem a aresta. Caso o find resulte em componentes diferentes, significa que para o processador da direita estes dois vértices estão em um mesmo componente no grafo (pois ele viu isso na busca em profundidade) mas o processador da esquerda não viu esses dois vértices na sua busca em profundidade e então ele deve atualizar o índice dos dois vértices e na sua estrutura floresta, adicionar a aresta, sendo esse processo o union. Caso o processador da esquerda, ao fazer o find, retorne que os dois vértices estão no mesmo componente, então simplesmente ignora a aresta do processador da direita.
+ 
+Esse procedimento é repetido para todas as arestas que o processador da direita possui em sua estrutura floresta. Após concluído esse procedimento, teremos em todos os processadores da esquerda, os valores atualizados e nos da direita, os valores que não serão mais uteis, portanto, metade dos processadores não serão mais utilizados para o próximo passo, que é executar novamente a união dos conjuntos com os processadores que ainda restaram, par a par. Ao final desse processo, teremos apenas dois processadores e o processador da esquerda deste ultimo procedimento terá a informação completa sobre os componentes conexos do grafo de entrada. A Figura~\ref{1} ilustra a execução deste algoritmo, o qual é representado nos Algoritmos~\ref{3} e \ref{4}.
 
 \begin{figure}[htp!]
 	\centering
@@ -192,7 +200,7 @@ Feita a busca em profundidade, é hora de unir todos os dados dos processadores.
     \SetKwFor{ForPar}{para}{fa\c{c}a em paralelo}{fim para cada}
     \ComponentesConexosPar{{\normalfont(grafo G = (V, E))}}
     {
-    	\tcp{Dividir os vértices pelas threads}
+    	\tcp{Divida os vértices pelas threads}
         nTh $\gets$ número de threads\;
         nVerticesExtra $\gets |\text{V}|$ -- ($\lfloor \frac{|\text{V}|}{\text{nTh}} \rfloor$ $\times$ nTh)\;
         \ForPar{$t \gets 0$ \Ate $nTh-1$}
@@ -207,7 +215,7 @@ Feita a busca em profundidade, é hora de unir todos os dados dos processadores.
                 vFinal[t] $\gets$ vIncial[t] + $\lfloor\frac{|\text{V}|}{\text{nTh}}\rfloor$ -- 1\;
             }
         }
-        \tcp{Executar DFS em paralelo, gerando nTh florestas}
+        \tcp{Execute DFS em paralelo, gerando nTh florestas}
         \ParaCada{vértice v $\in$ V}
         {
             visitado[v] $\gets$ FALSO\;
@@ -228,7 +236,7 @@ Feita a busca em profundidade, é hora de unir todos os dados dos processadores.
                 }
             }
         }
-        \tcp{Unir pares de florestas em paralelo}
+        \tcp{Una pares de florestas em paralelo}
         nPares $\gets \frac{\text{nTh}}{\text{2}}$\;
         \Para{i $\gets$ 0 \Ate $\log_2\!\text{(nTh)}$ -- 1}
         {
@@ -302,7 +310,7 @@ Feita a busca em profundidade, é hora de unir todos os dados dos processadores.
 \section{Resultados e Análise}
 
 Para mensurar o desempenho dos dois algoritmos implementados, utilizamos um grafo de entrada aleatório com vários tamanhos, sendo eles 5.000, 10.000, 15.000 e 25.000 vértices. Apesar de o tamanho ser aparentemente pequeno, a busca em profundidade analisa todas as arestas do grafo e não somente os vértices, logo, para um grafo k-completo de 25.000 vértices teremos 312.487.500 arestas. Como os grafos são aleatórios, dividimos os mesmos em densidades (quantidade de arestas do grafo em relação a quantidade máxima de arestas possíveis), sendo elas 10\%, 25\%, 50\%, 75\% e 100\%. Um grafo de 5.000 vértices e densidade de 25\% tem 3.124.375 arestas já que, caso fosse definido uma densidade de 100\%, este mesmo grafo possuiria 12.497.500 arestas.
-A execução do algoritmo se deu em uma máquina DELL PRECISION (especificações) alocada na FACOM. Os gráficos abaixo ilustram os testes de desempenho.
+A execução do algoritmo se deu em uma máquina DELL PRECISION (Intel Xeon CPU E5-1620 v3 3.5GHz, 4 núcleos, 8 threads, 32GB de RAM) alocada na FACOM. Os gráficos abaixo ilustram os testes de desempenho.
 
 \begin{figure}[htp!]
     \centering
