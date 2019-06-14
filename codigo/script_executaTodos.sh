@@ -10,6 +10,15 @@ do
 	done
 done
 
+## cc_dfs
+for i in "${densidade[@]}"
+do
+	for j in "${grafo[@]}"
+	do
+		./cc_dfs "g${j}d${i}.txt" >> tempo.txt
+	done
+done
+
 ## cc_grama 2 threads
 for i in "${densidade[@]}"
 do
