@@ -4,7 +4,6 @@
 \usepackage{graphicx,url}
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
-\usepackage{lipsum}
 %\usepackage[latin1]{inputenc}  
 \usepackage{amsmath}
 \usepackage[portuguese,ruled,vlined]{algorithm2e}
@@ -22,6 +21,8 @@
 \usepackage{amsmath}
 \usepackage{float}
      
+\definecolor{green}{HTML}{4CAF50}     
+
 \sloppy
 
 \title{Componentes Conexos em Processador Multicore}
@@ -32,8 +33,8 @@
 
 \begin{document} 
 
+
 \maketitle
-     
 \begin{resumo} 
 Este artigo apresenta dois algoritmos para solucionar o problema dos componentes conexos de um grafo não orientado. Foram implementadas uma solução sequencial conhecida da literatura e uma solução paralela baseada em uma descrição de alto nível, também da literatura. É apresentado os detalhes dessa implementação paralela e discutida uma análise sobre o desempenho dos dois algoritmos.
 \end{resumo}
@@ -45,10 +46,11 @@ Encontrar os componentes conexos de um grafo é o coração de muitas das aplica
 
 O objetivo deste trabalho é implementar e analisar duas soluções para o problema dos componentes conexos, sendo uma sequencial e outra paralela, ambas da literatura. Analisando o desempenho obtido pelos algoritmos, poderemos concluir se a paralelização do problema de fato produz algum ganho em relação ao algoritmo sequencial.
 
-No capítulo 2 são apresentados os dois algoritmos, sendo o sequencial integralmente e o paralelo somente a descrição da literatura. No capítulo 3 é apresentada a implementação do algoritmo paralelo. No capítulo 4 é feita uma análise sobre o desempenho obtido pelos dois algoritmos e como foi feita essa medição. No capítulo 5 é apresentada a conclusão deste trabalho.
+No Capítulo~\ref{algoritmos} são apresentados os dois algoritmos, sendo o sequencial integralmente e o paralelo somente a descrição da literatura. No Capítulo~\ref{paralelo} é apresentada a implementação do algoritmo paralelo. No Capítulo~\ref{resultados} é feita uma análise sobre o desempenho obtido pelos dois algoritmos e como foi feita essa medição. No Capítulo~\ref{conclusao} é apresentada a conclusão deste trabalho.
 
 \section{Algoritmos Sequencial e Paralelo para Componentes Conexos}
-O algoritmo sequencial apresentado neste trabalho é baseado na busca em profundidade (\emph{depth-first search}, DFS). Assim como a busca em profundidade, outros algoritmos sequenciais podem ser utilizados para resolver o problema dos componentes conexos, sendo um deles, o algoritmo baseado nas operações \emph{Union-Find}. Tanto o algoritmo da busca em profundidade quanto o baseado nas operações \emph{Union-Find} são descritos em~\cite{Sedgewick:2011}. Em~\cite{Grama:2003} também é apresentado o algoritmo de busca em profundidade para solucionar sequencialmente o problema dos componentes conexos, assim como, é apresentado de maneira alto nível uma possível paralelização deste algoritmo.
+\label{algoritmos}
+O algoritmo sequencial apresentado neste trabalho é baseado na busca em profundidade (\emph{depth-first search}, DFS). Assim como a busca em profundidade, outros algoritmos sequenciais podem ser utilizados para resolver o problema dos componentes conexos, sendo um deles, o algoritmo baseado nas operações \emph{Union-Find}. Tanto o algoritmo da busca em profundidade quanto o baseado nas operações \emph{Union-Find} são descritos em~\cite{Sedgewick:2011} e~\cite{Cormen:2009}. Em~\cite{Grama:2003} também é apresentado o algoritmo de busca em profundidade para solucionar sequencialmente o problema dos componentes conexos, assim como, é apresentado de maneira alto nível uma possível paralelização deste algoritmo. Outros algoritmos paralelos que resolvem o problema dos componentes conexos podem ser vistos em~\cite{Roosta:1999}.
 
 \subsection{Algoritmo Sequencial Baseado em Busca em Profundidade}
 
@@ -131,16 +133,16 @@ Primeiramente, deve-se dividir a matriz de adjacências do grafo por todos os pr
 \end{algorithm}
 
 \section{Solução Paralela para Componentes Conexos para Processador Multicore}
-Tendo em mãos a descrição de alto nível do algoritmo paralelo, foi implementado uma versão do algoritmo levando-se em consideração as especificidades da linguagem escolhida, da interface de programação paralela e da experiência do autor deste trabalho. Foi utilizado lista de adjacências para representar o grafo e não matriz de adjacências como visto no Algoritmo~\ref{alg_grama}. A linguagem utilizada é C e para paralelizar o código, foi utilizada a interface de programação OpenMP~\cite{OpenMP:2018}. Para ajudar na compreensão do algoritmo implementado, a Figura~\ref{fig:1} ilustra os passos do algoritmo em um determinado grafo de entrada.
+\label{paralelo}
+Tendo em mãos a descrição de alto nível do algoritmo paralelo, foi implementado uma versão do algoritmo levando-se em consideração as especificidades da linguagem escolhida, da interface de programação paralela e da experiência do autor deste trabalho. Foi utilizado lista de adjacências para representar o grafo e não matriz de adjacências como visto no Algoritmo~\ref{alg_grama}. A linguagem utilizada é C e para paralelizar o código, foi utilizada a interface de programação OpenMP~\cite{OpenMP:2018}. Para ajudar na compreensão do algoritmo implementado, a Figura~\ref{fig:1} ilustra os passos algoritmo, tendo como entrada um grafo de exemplo, que pode ser visto em Figura~\ref{fig:1}(a).
 
-Como entrada, o algoritmo implementado recebe um arquivo contendo todas as arestas de um grafo. Ao ler esse conjunto de arestas, o algoritmo povoa a lista de adjacências que será utilizada pela busca em profundidade. Com a lista de adjacências pronta, é feito um cálculo para dividir o mais igual possível a quantidade de vértices para cada processador, na intenção de dividir igualmente a carga de trabalho. Sendo assim, cada processador irá possuir um subgrafo que será gerado pelos vértices da lista de adjacência designados a este processador. Ao final desse processo, cada processador possuirá os vértices que compõe seu subgrafo de trabalho, como ilustrado em (c) da Figura~\ref{fig:1}.
+Como entrada, o algoritmo implementado recebe um arquivo contendo todas as arestas de um grafo. Ao ler esse conjunto de arestas, o algoritmo povoa a lista de adjacências que será utilizada pela busca em profundidade, como visto na Figura~\ref{fig:1}(b). Com a lista de adjacências pronta, é feito um cálculo para dividir o mais igual possível a quantidade de vértices para cada processador, na intenção de dividir igualmente a carga de trabalho. Sendo assim, cada processador irá possuir um subgrafo que será gerado pelos vértices da lista de adjacência designados a este processador. Ao final desse processo, cada processador possuirá os vértices que compõe seu subgrafo de trabalho, como ilustrado na Figura~\ref{fig:1}(c).
 
-A busca em profundidade é executada em paralelo, cada processador, ao ver um vértice, irá marcar esse vértice em um componente e todos os outros vértices que podem ser vistos a partir deste, estarão no mesmo componente. É utilizado uma estrutura de dados chamada componente, onde cada processador possui o índice do componente ao qual o vértice pertence. Também durante a busca em profundidade, é necessário que seja armazenado a aresta da qual o processador “viu”. É utilizada a estrutura floresta para que seja guardado as arestas “vistas” durante a busca. O resultado da busca em profundidade que cada processador executa são, uma floresta e o índice do componente de cada vértice, como ilustrado em (d) da Figura~\ref{fig:1}. Veja que, um processador também guarda o índice do componente de um vértice que ele ainda não viu (por padrão, o índice do próprio vértice), sendo que, essa inconsistência será resolvida no próximo passo do algoritmo.
+A busca em profundidade é executada em paralelo, cada processador, ao ver um vértice, irá marcar esse vértice em um componente e todos os outros vértices que podem ser vistos a partir deste, estarão no mesmo componente. É utilizado uma estrutura de dados chamada componente, onde cada processador possui o índice do componente ao qual o vértice pertence. Também durante a busca em profundidade, é necessário que seja armazenado a aresta da qual o processador “viu”. É utilizada a estrutura floresta para que seja guardado as arestas “vistas” durante a busca. O resultado da busca em profundidade que cada processador executa são, uma floresta e o índice do componente de cada vértice, como ilustrado na da Figura~\ref{fig:1}(d). Veja que, um processador também guarda o índice do componente de um vértice que ele ainda não viu (por padrão, o índice do próprio vértice), sendo que, essa inconsistência será resolvida no próximo passo do algoritmo.
 
-\newpage
-Feita a busca em profundidade, é hora de unir todos os dados dos processadores. Como essa união é feita entre dois processadores (par a par) paralelamente, é utilizada a definição de “processador da esquerda” e “processador da direita” para se referir aos dois processadores que compõem o par. Na união das florestas, para cada aresta pertencente a estrutura floresta do processador da direita, o processador da esquerda faz um \emph{Find} dos dois vértices que compõem esta aresta. Caso o \emph{Find} retorne dois componentes diferentes, significa que para o processador da direita, estes dois vértices estão em um mesmo componente no grafo (já que ele processou isso na busca em profundidade), mas o processador da esquerda não “viu” esses dois vértices na sua busca em profundidade. Então ele, o processador da esquerda, deve atualizar o índice dos componentes destes dois vértices que estão na aresta e na sua estrutura floresta, adicionar esta aresta, sendo esse processo, o \emph{Union}. Caso o processador da esquerda, ao fazer o \emph{Find}, perceba que os dois vértices estão no mesmo componente (índices iguais), ele simplesmente irá ignorar a aresta do processador da direita. Este procedimento é repetido para todas as arestas que o processador da direita possui em sua estrutura floresta. Ao final, estará concluída a união das florestas dos processadores do par, sendo que, o resultado da união será as próprias estruturas floresta e componente, do processador da esquerda, como ilustrado em (e) da Figura~\ref{fig:1}.
+Feita a busca em profundidade, é hora de unir todos os dados dos processadores. Como essa união é feita entre dois processadores (par a par) paralelamente, é utilizada a definição de “processador da esquerda” e “processador da direita” para se referir aos dois processadores que compõem o par. Na união das florestas, para cada aresta pertencente a estrutura floresta do processador da direita, o processador da esquerda faz um \emph{Find} dos dois vértices que compõem esta aresta. Caso o \emph{Find} retorne dois componentes diferentes, significa que para o processador da direita, estes dois vértices estão em um mesmo componente no grafo (já que ele processou isso na busca em profundidade), mas o processador da esquerda não “viu” esses dois vértices na sua busca em profundidade. Então ele, o processador da esquerda, deve atualizar o índice dos componentes destes dois vértices que estão na aresta e na sua estrutura floresta, adicionar esta aresta, sendo esse processo, o \emph{Union}. Caso o processador da esquerda, ao fazer o \emph{Find}, perceba que os dois vértices estão no mesmo componente (índices iguais), ele simplesmente irá ignorar a aresta do processador da direita. Este procedimento é repetido para todas as arestas que o processador da direita possui em sua estrutura floresta. Ao final, estará concluída a união das florestas dos processadores do par, sendo que, o resultado da união será as próprias estruturas floresta e componente, do processador da esquerda, como ilustrado na Figura~\ref{fig:1}(e).
 
-Após a conclusão da união, é visto que as informações atualizadas (e que serão necessárias) serão armazenadas no processador da esquerda, pois, o processador da direita não será mais utilizado. Então, haverá uma nova rodada de uniões de florestas, agora com os processadores que sobraram da primeira rodada. Novamente, par a par, os processadores farão o procedimento de unir as suas florestas. Isso irá se repetir, até que sobre somente dois processadores, sendo que, após esta última união, o resultado do algoritmo estará armazenado nas estruturas do processador da esquerda. Em (f) da Figura~\ref{fig:1} é possível observar o resultado do algoritmo.
+Após a conclusão da união, é visto que as informações atualizadas (e que serão necessárias) serão armazenadas no processador da esquerda, pois, o processador da direita não será mais utilizado. Então, haverá uma nova rodada de uniões de florestas, agora com os processadores que sobraram da primeira rodada. Novamente, par a par, os processadores farão o procedimento de unir as suas florestas. Isso irá se repetir, até que sobre somente dois processadores, sendo que, após esta última união, o resultado do algoritmo estará armazenado nas estruturas do processador da esquerda. Na Figura~\ref{fig:1}(f) é possível observar o resultado do algoritmo.
 
 A implementação apresentada neste tópico pode ser vista, no Algoritmo~\ref{alg_par1} e no Algoritmo~\ref{alg_par2}.
 
@@ -314,16 +316,16 @@ A implementação apresentada neste tópico pode ser vista, no Algoritmo~\ref{al
 		\label{fig:1}
 \end{figure}
 
-\newpage
 \section{Resultados e Análise}
+\label{resultados}
 
 Para mensurar o desempenho dos dois algoritmos implementados, foi utilizado como entrada, um grafo gerado aleatoriamente. A fim de observar o comportamento dos algoritmos em diferentes tipos de grafos, dividimos os mesmos em relação a tamanho (quantidade de vértices) e densidade (quantidade de arestas em relação à quantidade máxima de arestas possíveis do grafo).
 
-Os tamanhos escolhidos foram: 5~000, 10~000, 15~000 e 25~000 vértices. Apesar de os tamanhos serem aparentemente pequenos, a busca em profundidade analisa todas as arestas do grafo e não somente os vértices, logo, para um grafo k-completo de 25~000 vértices, teremos 312~487~500 arestas. As densidades escolhidas foram: 10\%, 25\%, 50\%, 75\% e 100\%. Um grafo de densidade 10\% possui, independentemente do número de vértices, 10\% de arestas da quantidade máxima de arestas que pode possuir. Um grafo de densidade 100\% é simplesmente um grafo k-completo. Para ilustrar as variações entre tamanho e densidade, temos como exemplo que um grafo de 5~000 vértices e densidade de 25\%, irá possuir 3~124~375 arestas.
+Os tamanhos escolhidos foram: 5.000, 10.000, 15.000 e 25.000 vértices. Apesar de os tamanhos serem aparentemente pequenos, a busca em profundidade analisa todas as arestas do grafo e não somente os vértices, logo, para um grafo k-completo de 25.000 vértices, teremos 312.487.500 arestas. As densidades escolhidas foram: 10\%, 25\%, 50\%, 75\% e 100\%. Um grafo de densidade 10\% possui, independentemente do número de vértices, 10\% de arestas da quantidade máxima de arestas que pode possuir. Um grafo de densidade 100\% é simplesmente um grafo k-completo. Para ilustrar as variações entre tamanho e densidade, temos como exemplo que um grafo de 5.000 vértices e densidade de 25\%, irá possuir 3.124.375 arestas.
 
-A máquina onde os testes foram executados encontra-se na FACOM, sendo ela um Dell Precision, processador Intel Xeon E5-1620 v3 3.5GHz, 4 núcleos, 8 threads e 32 GB de RAM. O compilador utilizado foi o GCC versão 7.4 (com a opção -O3) e o sistema operacional utilizado foi o Ubuntu 16.04 x86\_64. Os dados obtidos nos testes foram compilados a partir de 5 execuções de cada algoritmo, para cada tamanho e densidade do grafo de entrada.
+A máquina onde os testes foram executados encontra-se na FACOM, sendo ela um Dell Precision, processador Intel Xeon E5-1620 v3 3,5GHz, 4 núcleos, 8 threads e 32 GB de RAM. O compilador utilizado foi o GCC versão 7.4 (com a opção -O3) e o sistema operacional utilizado foi o Ubuntu 16.04 x86\_64. Os dados obtidos nos testes foram compilados a partir de 5 execuções de cada algoritmo, para cada tamanho e densidade do grafo de entrada.
 
-As Figuras~\ref{fig:2} e \ref{fig:3} ilustram graficamente os tempos de execuções dos algoritmos, dado as diferentes entradas. Na figura~\ref{fig:2} a densidade do grafo de entrada é fixada em 100\% e na Figura~\ref{fig:3} o tamanho do grafo de entrada é fixado em 25~000 vértices. Em ambas as figuras são comparados os tempos de execução do algoritmo sequencial e do paralelo com 16 \emph{threads}. É possível notar que, o tempo de execução do algoritmo sequencial aumenta exponencialmente quando se varia a quantidade de vértices sendo que, no algoritmo paralelo, apesar de não ser linear, o aumento do tempo de execução é bem menor. Também se nota que a densidade do grafo de entrada impacta muito mais o tempo de execução do algoritmo sequencial do que o tempo do algoritmo paralelo.
+As Figuras~\ref{fig:2} e \ref{fig:3} ilustram graficamente os tempos de execuções dos algoritmos, dado as diferentes entradas. Na figura~\ref{fig:2} a densidade do grafo de entrada é fixada em 100\% e na Figura~\ref{fig:3} o tamanho do grafo de entrada é fixado em 25.000 vértices. Em ambas as figuras são comparados os tempos de execução do algoritmo sequencial e do paralelo com 16 \emph{threads}. É possível notar que, o tempo de execução do algoritmo sequencial aumenta exponencialmente quando se varia a quantidade de vértices sendo que, no algoritmo paralelo, apesar de não ser linear, o aumento do tempo de execução é bem menor. Também se nota que a densidade do grafo de entrada impacta muito mais o tempo de execução do algoritmo sequencial do que o tempo do algoritmo paralelo.
 
 \begin{figure}[H]
     \centering
@@ -379,7 +381,7 @@ As Figuras~\ref{fig:2} e \ref{fig:3} ilustram graficamente os tempos de execuç�
     \end{minipage}
 \end{figure}
 
-As Figuras~\ref{fig:4} e \ref{fig:5} ilustram graficamente o \emph{speedup} alcançado pelo algoritmo paralelo em relação ao algoritmo sequencial. Nas duas figuras temos todas as entradas analisadas no teste, variando o eixo de exibição. É interessante notar que há uma variação de desempenho no grafo de entrada de 10~000 vértices, já  que ele não segue o “padrão” visto nos outros grafos de entrada. Inicialmente, pensou-se que isso se devia a um caso isolado, mas após várias execuções, esse desempenho se repetiu. Também se nota que o algoritmo paralelo, com o maior e mais denso grafo de entrada, foi 3.4 vezes mais rápido que o algoritmo sequencial.
+As Figuras~\ref{fig:4} e \ref{fig:5} ilustram graficamente o \emph{speedup} alcançado pelo algoritmo paralelo em relação ao algoritmo sequencial. Nas duas figuras temos todas as entradas analisadas no teste, variando o eixo de exibição. É interessante notar que há uma variação de desempenho no grafo de entrada de 10.000 vértices, já  que ele não segue o “padrão” visto nos outros grafos de entrada. Inicialmente, pensou-se que isso se devia a um caso isolado, mas após várias execuções, esse desempenho se repetiu. Também se nota que o algoritmo paralelo, com o maior e mais denso grafo de entrada, foi 3,4 vezes mais rápido que o algoritmo sequencial.
 
 \begin{figure}[H]
     \centering
@@ -405,7 +407,7 @@ As Figuras~\ref{fig:4} e \ref{fig:5} ilustram graficamente o \emph{speedup} alca
 					(5K,2.6475)(10K,2.7354)(15K,2.7931)(25K,3.0458)};
 				\addplot coordinates {
 					(5K,2.7349)(10K,2.8928)(15K,3.0592)(25K,3.1849)};
-				\addplot coordinates {
+				\addplot+[green, mark options={fill=green}] coordinates {
 					(5K,2.8858)(10K,3.0675)(15K,3.3382)(25K,3.4140)};
 			\legend{5\%, 25\%, 50\%, 75\%, 100\%}
 			\end{axis}
@@ -468,7 +470,7 @@ Por padrão, o OpenMP utiliza a quantidade de \emph{threads} disponíveis do pro
 					(5K,2.0038)(10K,8.4621)(15K,21.8479)(25K,64.3706)};
 				\addplot coordinates {
 					(5K,1.2820)(10K,5.8591)(15K,14.8007)(25K,41.4975)};
-				\addplot coordinates {
+				\addplot+[green, mark options={fill=green}] coordinates {
 					(5K,1.0018)(10K,4.3181)(15K,10.5758)(25K,31.0767)};
 				\addplot coordinates {
 					(5K,0.9850)(10K,4.2318)(15K,10.5094)(25K,30.9745)};
@@ -498,7 +500,7 @@ Por padrão, o OpenMP utiliza a quantidade de \emph{threads} disponíveis do pro
 				\addplot coordinates {
 					(5\%,1.6939)(25\%,11.2393)(50\%,22.2700)(75\%,35.0567)(100\%,41.4975)
 				};
-				\addplot coordinates {
+				\addplot+[green, mark options={fill=green}] coordinates {
 					(5\%,1.3561)(25\%,8.1547)(50\%,16.7268)(75\%,24.5019)(100\%,31.0767)
 				};
 				\addplot coordinates {
@@ -514,10 +516,11 @@ Por padrão, o OpenMP utiliza a quantidade de \emph{threads} disponíveis do pro
 \end{figure}
 
 \section{Conclusão}
+\label{conclusao}
 
 A descrição do algoritmo paralelo visto em~\cite{Grama:2003} é muito alto nível para a união das florestas. Implementar este algoritmo mostrou-se ser desafiador para o autor deste trabalho. Os detalhes das estruturas e a maneira como foi implementada a união das florestas, foi concebida do zero, sem ter referências para se apoiar. Em contrapartida, utilizar a interface de programação OpenMP, facilitou e muito a implementação do paralelismo no algoritmo. Não houve teste com tamanhos maiores de grafos, pois, o tamanho ocupado fisicamente pelo grafo de entrada é muito grande, sendo que, nos testes que utilizamos tamanhos muito grandes, houve estouro de memória e não foi possível realizar o teste.
-\newpage
-Como visto no capítulo 4, o algoritmo paralelo teve um ganho de até 3.4 vezes em relação ao sequencial. Ao analisar que o processador testado só possui 4 núcleos, esse ganho se apresenta ser muito satisfatório. Mesmo no pior cenário, o algoritmo paralelo alcançou pelo menos 2 vezes o desempenho do algoritmo sequencial. Apesar das complexidades maiores que o algoritmo paralelo traz em relação ao sequencial (que é relativamente simples e muito bem conhecido na literatura), o desempenho adquirido faz valer toda a dificuldade e põe o algoritmo paralelo como uma boa escolha para resolver o problema dos componentes conexos.
+
+Como visto no Capítulo~\ref{resultados}, o algoritmo paralelo teve um ganho de até 3,4 vezes em relação ao sequencial. Ao analisar que o processador testado só possui 4 núcleos, esse ganho se apresenta ser muito satisfatório. Mesmo no pior cenário, o algoritmo paralelo alcançou pelo menos 2 vezes o desempenho do algoritmo sequencial. Apesar das complexidades maiores que o algoritmo paralelo traz em relação ao sequencial (que é relativamente simples e muito bem conhecido na literatura), o desempenho adquirido faz valer toda a dificuldade e põe o algoritmo paralelo como uma boa escolha para resolver o problema dos componentes conexos.
 
 Para trabalhos futuros, é possível melhorar ainda mais a implementação do algoritmo paralelo. As operações \emph{Union-Find} utilizadas na implementação são as mais simples da literatura. Em~\cite{Sedgewick:2011} é apresentado uma versão mais eficiente do \emph{Union-Find}, com pesos e compressão de caminhos, porém, de maior complexidade de implementação. Outra situação vista no algoritmo paralelo aqui implementado se dá ao executar uma rodada de uniões par a par, quando metade das \emph{threads} não serão mais utilizadas na próxima rodada. Analisar e implementar uma maneira de utilizar novamente essas \emph{threads}, poderia trazer um ganho ainda maior para o algoritmo paralelo.
 
